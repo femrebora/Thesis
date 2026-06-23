@@ -1,0 +1,136 @@
+# =============================================================================
+# .gitignore — Thesis reproducible analysis repository
+# =============================================================================
+
+# --- R ---
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+renv/library/
+renv/local/
+renv/cellar/
+renv/lock/
+renv/sandbox/
+renv/staging/
+*.Renviron
+
+# --- R package cache ---
+*.tar.gz
+
+# --- Sequencing data (FASTQ, BAM, etc.) ---
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bam
+*.bai
+*.sam
+*.cram
+*.vcf
+*.vcf.gz
+
+# --- Raw & intermediate data ---
+*.qs
+*.rds
+*.RDS
+*.rda
+*.RData
+
+# --- Large TCGA downloads ---
+**/cache/GDCdata/
+**/GDCdata/
+
+# --- CRAM/BAM indices ---
+*.crai
+
+# --- Generic data files (explicit allow-list below) ---
+*.csv
+*.tsv
+*.xlsx
+*.xls
+
+# --- Images (except final figures) ---
+*.tiff
+!**/figures/*.tiff
+*.tif
+
+# --- Compressed archives ---
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# --- Log files ---
+*.log
+*.nextflow.log*
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+*~
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Temporary / scratch ---
+tmp/
+temp/
+scratch/
+
+# --- Python ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# --- Conda ---
+*.conda/
+
+# =============================================================================
+# ALLOW-LIST — safe files to track
+# =============================================================================
+# Data documentation
+!**/data/README.md
+
+# Results (precomputed tables needed for figure reproduction)
+!**/results/*.csv
+!**/results/**/*.csv
+!**/results/*.tsv
+!**/results/**/*.tsv
+!**/results/*.xlsx
+!**/results/**/*.xlsx
+
+# Data files (processed, non-sensitive)
+!**/data/*.csv
+!**/data/**/*.csv
+
+# Gene lists (small, public)
+!**/gene_lists/*.txt
+!**/gene_lists/*.csv
+
+# Metadata templates
+!**/metadata/*_template.csv
+!**/metadata/*.csv
+
+# Configuration files
+!.Rprofile
+!renv.lock
+
+# Scripts and documentation
+!*.R
+!*.Rmd
+!*.md
+!*.pdf
+!*.png
+!*.tiff
+!*.docx
+
+# Git files
+!.gitignore
+!.gitattributes

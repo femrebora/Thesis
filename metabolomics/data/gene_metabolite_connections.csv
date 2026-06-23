@@ -1,0 +1,2 @@
+Pathway,Gene,Gene_LFC,Gene_Direction,Metabolite,Metab_log2FC,Metab_pvalue
+Linoleic acid metabolism,ALOX15,2.373,0.636,"(9Z, 12Z)-Octadecadienoate",3.3757,0.005891475718646

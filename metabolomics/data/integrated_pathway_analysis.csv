@@ -1,0 +1,66 @@
+Pathway,CRISPR_Genes,CRISPR_Gene_Names,Metabolites,Metabolite_Names,Combined_Score,Dual_Evidence
+Drug metabolism,3,"CYB5A, CYP2E1, NAT2",0,,3,False
+Arachidonic acid metabolism,3,"ALOX15, ALOXE3, PLA2G4E",0,,3,False
+Secondary metabolite/Terpenoid,0,,3,"Gangaleoidin, Glabrone, Hedysarimcoumestan A",3,False
+Other/Unclassified,0,,3,"4-Nitrophenyl phosphate, Homoeriodictyol, b-Hydroxypropionate",3,False
+Amino acid metabolism,0,,3,"Octopine, S-Adenosylmethionine, Trp",3,False
+Lipid signaling,2,"ALOX15, PLA2G4E",0,,2,False
+Xenobiotic metabolism,2,"CYP2E1, NAT2",0,,2,False
+Urea cycle,2,"ASL, SLC25A15",0,,2,False
+Steroid hormone biosynthesis,2,"CYB5A, HSD11B1",0,,2,False
+Oxidative phosphorylation,2,"ATP6V0A4, COQ4",0,,2,False
+Mitochondrial transport,2,"SLC25A15, SLC25A20",0,,2,False
+Lysosomal metabolism,2,"ARSD, GBA3",0,,2,False
+Linoleic acid metabolism,1,ALOX15,1,"(9Z, 12Z)-Octadecadienoate",2,True
+Fatty acid/Lipid metabolism,0,,2,"(9Z, 12Z)-Octadecadienoate, Bestatin",2,False
+Xenobiotic/Drug metabolism,0,,2,"2,6-Dichloro-4-nitroaniline, Bestatin",2,False
+Arginine biosynthesis,2,"ASL, SLC25A15",0,,2,False
+Carbon metabolism,2,"PFKFB1, TKTL1",0,,2,False
+Cytochrome P450,1,CYP2E1,0,,1,False
+Pyrimidine metabolism,1,RRM2,0,,1,False
+Neuroactive ligand-receptor,1,GRIN1,0,,1,False
+Neurotransmitter clearance,1,SLC1A1,0,,1,False
+Neurotransmitter transport,1,SLC6A3,0,,1,False
+Nitrogen metabolism,1,ASL,0,,1,False
+Nucleotide metabolism,1,RRM2,0,,1,False
+Calcium transport,1,GRIN1,0,,1,False
+Pentose phosphate pathway,1,TKTL1,0,,1,False
+Phospholipid metabolism,1,SLC44A1,0,,1,False
+Propanoate metabolism,0,,1,b-Hydroxypropionate,1,False
+Retinol metabolism,1,DHRSX,0,,1,False
+Cytochrome P450 metabolism,1,CYB5A,0,,1,False
+Calcium signaling,1,TPCN1,0,,1,False
+Sphingolipid metabolism,1,ARSD,0,,1,False
+Arginine/Proline metabolism,0,,1,Octopine,1,False
+Steroid metabolism,1,DHRSX,0,,1,False
+Thiamine metabolism,0,,1,Thiamine monophosphate,1,False
+Tryptophan metabolism,0,,1,Trp,1,False
+Ubiquinone biosynthesis,1,COQ4,0,,1,False
+Very long-chain fatty acid biosynthesis,1,TECR,0,,1,False
+Amino acid transport,1,SLC1A1,0,,1,False
+Natural product (marine/fungal),0,,1,Chloratranol,1,False
+Carnitine shuttle,1,SLC25A20,0,,1,False
+Mineral absorption,1,TRPM7,0,,1,False
+Magnesium transport,1,TRPM7,0,,1,False
+DNA replication,1,RRM2,0,,1,False
+Dopamine transport,1,SLC6A3,0,,1,False
+Cysteine/Methionine metabolism,0,,1,S-Adenosylmethionine,1,False
+Fatty acid elongation,1,TECR,0,,1,False
+Fatty acid oxidation,1,SLC25A20,0,,1,False
+Cortisol metabolism,1,HSD11B1,0,,1,False
+Flavonoid biosynthesis,0,,1,Naringenin,1,False
+Fructose/mannose metabolism,1,PFKFB1,0,,1,False
+Glutamate signaling,1,GRIN1,0,,1,False
+Glutamate transport,1,SLC1A1,0,,1,False
+Glycerophospholipid metabolism,1,PLA2G4E,0,,1,False
+Glycolysis/Gluconeogenesis,1,PFKFB1,0,,1,False
+Glycosphingolipid metabolism,1,GBA3,0,,1,False
+Cofactor/Vitamin/Antibiotic,0,,1,Thiamine monophosphate,1,False
+Lipid metabolism,1,ALOXE3,0,,1,False
+Choline transport,1,SLC44A1,0,,1,False
+Lipid transport,1,APOC1,0,,1,False
+Lipoprotein metabolism,1,APOC1,0,,1,False
+Lysosomal acidification,1,ATP6V0A4,0,,1,False
+Cholesterol metabolism,1,APOC1,0,,1,False
+Lysosomal transport,1,TPCN1,0,,1,False
+Acetylation,1,NAT2,0,,1,False

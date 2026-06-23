@@ -1,0 +1,14 @@
+sample_id,group,cell_line,condition,timepoint,replicate
+R0_1,R0,A172-R,resistant,day0,1
+R0_2,R0,A172-R,resistant,day0,2
+R0_3,R0,A172-R,resistant,day0,3
+Rpost_1,Rpost,A172-R,resistant,tumour,1
+Rpost_2,Rpost,A172-R,resistant,tumour,2
+Rpost_3,Rpost,A172-R,resistant,tumour,3
+Rpost_4,Rpost,A172-R,resistant,tumour,4
+S0_1,S0,A172-S,sensitive,day0,1
+S0_2,S0,A172-S,sensitive,day0,2
+S0_3,S0,A172-S,sensitive,day0,3
+Spost_1,Spost,A172-S,sensitive,tumour,1
+Spost_2,Spost,A172-S,sensitive,tumour,2
+Spost_3,Spost,A172-S,sensitive,tumour,3

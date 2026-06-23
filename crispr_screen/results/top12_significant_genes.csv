@@ -1,0 +1,31 @@
+Gen,"Dirençli:
+Tümör / Gün 0","Duyarlı /
+Dirençli
+(Tümör)","Duyarlı:
+Tümör / Gün 0",p-değeri,İşlev
+PLA2G4E,12.3,-12.1,,2.4e-03,"Fosfolipaz A2 aktivitesi;
+araşidonat salınımı ve lipid
+aracıları"
+SLC1A1,11.4,-11.3,,7.7e-03,"Glutamat taşıyıcılığı; sistein
+alımı ve glutatyon dengesi"
+RRM2,10.9,-10.8,,1.3e-02,"dNTP sentezi; DNA replikasyonu ve
+onarımı"
+ARSD,10.4,-10.2,,1.9e-02,"Sülfataz aktivitesi; lizozomal
+sülfat metabolizması"
+GRIN1,10.3,-10.2,,2.4e-02,"NMDA reseptör alt birimi; glutamat
+aracılı Ca2+ sinyali"
+NAT2,3.2,1.6,5.6,6.1e-03,Ksenobiyotik ve ilaç asetilasyonu
+SLC25A20,-0.0,1.2,0.7,1.4e-02,"Karnitin-asilkarnitin taşınımı;
+mitokondriyal yağ asidi
+oksidasyonu"
+TPCN1,-6.7,,,2.4e-02,"Endolizozomal iyon kanalı; Ca2+
+sinyallemesi"
+ATP6V0A4,-7.3,,,1.9e-02,"V-ATPaz alt birimi; organel
+asidifikasyonu"
+GBA3,-8.8,,,1.3e-02,"Sitozolik beta-glukozidaz;
+glikozid ve glikolipid
+metabolizması"
+ASL,-11.5,,,2.4e-03,Üre döngüsü; arginin biyosentezi
+ALOX15,,2.4,1.7,8.3e-03,"Lipoksigenaz aktivitesi; lipid
+peroksidasyonu ve eikosanoid
+metabolizması"

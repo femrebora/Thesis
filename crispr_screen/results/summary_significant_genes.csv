@@ -1,0 +1,26 @@
+Gene,Comparison,Effects,Direction,p-value,Function
+ASL,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -11.5,Depleted,2.4e-03,"Argininosuccinate lyase - urea cycle, arginine biosynthesis"
+PLA2G4E,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +12.3; Sensitive vs Resistant (Post-TRAIL): -12.1,Enriched; Depleted,2.4e-03,"Cytosolic PLA2 - arachidonate release, inflammation"
+NAT2,Sensitive vs Resistant (Post-TRAIL); Sensitive: Post-TRAIL vs Day-0,Sensitive vs Resistant (Post-TRAIL): +1.6; Sensitive: Post-TRAIL vs Day-0: +5.6,Enriched,6.1e-03,N-acetyltransferase 2 - drug/xenobiotic acetylation
+SLC1A1,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +11.4; Sensitive vs Resistant (Post-TRAIL): -11.3,Enriched; Depleted,7.7e-03,"EAAT3 glutamate transporter, GSH synthesis"
+ALOX15,Sensitive vs Resistant (Post-TRAIL),Sensitive vs Resistant (Post-TRAIL): +2.4,Enriched,8.3e-03,-
+GBA3,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -8.8,Depleted,1.3e-02,Cytosolic beta-glucosidase - glycolipid catabolism
+RRM2,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +10.9; Sensitive vs Resistant (Post-TRAIL): -10.8,Enriched; Depleted,1.3e-02,"Ribonucleotide reductase M2 - dNTP synthesis, DNA repair"
+SLC25A20,Sensitive vs Resistant (Post-TRAIL),Sensitive vs Resistant (Post-TRAIL): +1.2,Enriched,1.4e-02,-
+ARSD,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +10.4; Sensitive vs Resistant (Post-TRAIL): -10.2,Enriched; Depleted,1.9e-02,Arylsulfatase D - lysosomal sulfatase
+ATP6V0A4,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -7.3,Depleted,1.9e-02,V-ATPase subunit - lysosomal acidification
+GRIN1,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +10.3; Sensitive vs Resistant (Post-TRAIL): -10.2,Enriched; Depleted,2.4e-02,NMDA receptor GluN1 - Ca2+ signalling
+TPCN1,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -6.7,Depleted,2.4e-02,Two-pore channel 1 - lysosomal Ca2+ release
+CYB5A,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: -4.2; Sensitive vs Resistant (Post-TRAIL): +0.3,Depleted; Enriched,2.7e-02,Cytochrome b5A - electron transfer
+HSD11B1,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -5.7,Depleted,3.0e-02,11beta-HSD1 - glucocorticoid activation
+PFKFB1,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +9.8; Sensitive vs Resistant (Post-TRAIL): -9.6,Enriched; Depleted,3.0e-02,6-phosphofructo-2-kinase - glycolysis regulation
+TRPM7,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -3.1,Depleted,3.0e-02,TRPM7 channel - Mg2+/Ca2+ homeostasis
+ALOXE3,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -4.8,Depleted,3.5e-02,Epidermal lipoxygenase-3 - ceramide signalling
+SLC25A15,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +9.6; Sensitive vs Resistant (Post-TRAIL): -9.5,Enriched; Depleted,3.5e-02,Mitochondrial ornithine carrier - urea cycle
+APOC1,Sensitive vs Resistant (Post-TRAIL),Sensitive vs Resistant (Post-TRAIL): -0.3,Depleted,3.5e-02,-
+TKTL1,Sensitive vs Resistant (Post-TRAIL),Sensitive vs Resistant (Post-TRAIL): -0.3,Depleted,3.5e-02,-
+CYP2E1,Sensitive: Post-TRAIL vs Day-0,Sensitive: Post-TRAIL vs Day-0: -13.5,Depleted,3.8e-02,"CYP450 2E1 - xenobiotic metabolism, ROS generation"
+SLC6A3,Resistant: Post-TRAIL vs Day-0; Sensitive vs Resistant (Post-TRAIL),Resistant: Post-TRAIL vs Day-0: +9.3; Sensitive vs Resistant (Post-TRAIL): -9.2,Enriched; Depleted,4.0e-02,Dopamine transporter (DAT)
+TECR,Sensitive vs Resistant (Post-TRAIL),Sensitive vs Resistant (Post-TRAIL): -0.8,Depleted,4.1e-02,-
+DHRSX,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: -4.2,Depleted,4.3e-02,Dehydrogenase/reductase X
+SLC44A1,Resistant: Post-TRAIL vs Day-0,Resistant: Post-TRAIL vs Day-0: +7.8,Enriched,4.6e-02,Choline transporter-like protein 1

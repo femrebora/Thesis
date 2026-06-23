@@ -1,0 +1,105 @@
+"name","class","p_value","log2FC","significant","hmdb_id"
+"2,6-Dichloro-4-nitroaniline","Xenobiotic/Drug metabolism",3.34489234251845e-06,-5.9692,TRUE,NA
+"Trp","Amino acid metabolism",1.45396581691305e-05,4.2656,TRUE,NA
+"Glabrone","Secondary metabolite/Terpenoid",0.00195112562566137,3.9762,TRUE,NA
+"(9Z, 12Z)-Octadecadienoate","Fatty acid/Lipid metabolism",0.00589147571864603,3.3757,TRUE,NA
+"b-Hydroxypropionate","Fatty acid/Lipid metabolism",0.00714241457599587,1.4539,TRUE,NA
+"Bestatin","Xenobiotic/Drug metabolism",0.012269510399834,-0.84569,TRUE,NA
+"Thiamine monophosphate","Carbohydrate metabolism",0.0125746458514333,-0.83968,TRUE,NA
+"Chloratranol","Natural product (marine/fungal)",0.0154614400657488,6.5485,TRUE,NA
+"S-Adenosylmethionine","Cofactor/Vitamin/Antibiotic",0.0182080350964484,2.6685,TRUE,NA
+"4-Nitrophenyl phosphate","Amino acid metabolism",0.0196996310341201,-0.62237,TRUE,NA
+"Octopine","Amino acid metabolism",0.0232870292390333,-0.72594,TRUE,NA
+"Hedysarimcoumestan A","Secondary metabolite/Terpenoid",0.0314134927304801,-1.8426,TRUE,NA
+"Homoeriodictyol","Other/Unclassified",0.0352131544715453,-0.72617,TRUE,NA
+"Naringenin","Flavonoid biosynthesis",0.0396655596034303,-0.57184,TRUE,NA
+"Gangaleoidin","Secondary metabolite/Terpenoid",0.0465352080104991,2.8469,TRUE,NA
+"Apiopaeonoside","Secondary metabolite/Terpenoid",0.0506477688293942,-0.97676,FALSE,NA
+"73FTA","Other/Unclassified",0.0520105988041919,-0.71454,FALSE,NA
+"Benzimidazole","Xenobiotic/Drug metabolism",0.0680815772504084,-0.61679,FALSE,NA
+"4-Methylsulfinyl-3-butenyl glucosinolate","Glucosinolate metabolism",0.0689322821870319,-0.62986,FALSE,NA
+"Loperamide","Xenobiotic/Drug metabolism",0.090150291542729,-0.74195,FALSE,NA
+"Homocystine","Amino acid metabolism",0.100094178833312,-0.65406,FALSE,NA
+"Loganate","Fatty acid/Lipid metabolism",0.10382757026575,-0.68987,FALSE,NA
+"Chlorogenate","Fatty acid/Lipid metabolism",0.112951771517344,-0.72733,FALSE,NA
+"Lucidenic acid F","Secondary metabolite/Terpenoid",0.116965831013656,-1.1254,FALSE,NA
+"2-Amino-3-phosphonopropionate","Fatty acid/Lipid metabolism",0.12205665157945,-0.53439,FALSE,NA
+"(2R)-2-Hydroxy-3-butenyl glucosinolate","Glucosinolate metabolism",0.123151423359692,1.0703,FALSE,NA
+"Galacturonate 1-phosphate","Amino acid metabolism",0.124512511250157,0.47084,FALSE,NA
+"Quercetin-3,4'-O-di-beta-glucopyranoside","Flavonoid biosynthesis",0.126673075679734,-0.70517,FALSE,NA
+"Glu-Glu","Other/Unclassified",0.130399962398878,0.47047,FALSE,NA
+"Apigenin 7-O-glucuronide","Flavonoid biosynthesis",0.131072103854703,0.54364,FALSE,NA
+"Suffruticoside C","Secondary metabolite/Terpenoid",0.13173779914641,-0.97635,FALSE,NA
+"Dimethyl lithospermate","Fatty acid/Lipid metabolism",0.138708618151385,0.84458,FALSE,NA
+"Vincristine","Cofactor/Vitamin/Antibiotic",0.14050232744093,2.549,FALSE,NA
+"Zearalanone","Amino acid metabolism",0.155327766345763,-0.53988,FALSE,NA
+"Zeaxanthin","Other/Unclassified",0.169327561119141,-0.49413,FALSE,NA
+"Pinoresinol-4-O-glucoside","Carbohydrate metabolism",0.174189790861191,0.79807,FALSE,NA
+"Gibberellate","Fatty acid/Lipid metabolism",0.181558391553635,-1.1024,FALSE,NA
+"Thifensulfuron-methyl","Xenobiotic/Drug metabolism",0.183203351954196,-0.74241,FALSE,NA
+"1-O-p-Coumaroylglycerol","Other/Unclassified",0.184652876239523,-0.3936,FALSE,NA
+"L-Homocystine","Amino acid metabolism",0.201049918329846,-0.96248,FALSE,NA
+"Bergapten","Secondary metabolite/Terpenoid",0.20343798880265,3.9073,FALSE,NA
+"trans-Cinnamate","Amino acid metabolism",0.219035569049827,0.33138,FALSE,NA
+"Cytosine arabinoside","Other/Unclassified",0.225244395326854,-0.48052,FALSE,NA
+"Glutathione (oxidised form)","Amino acid metabolism",0.22810323301244,-0.39823,FALSE,NA
+"Argininosuccinate","Amino acid metabolism",0.230221486542587,0.35386,FALSE,NA
+"Oleandomycin","Cofactor/Vitamin/Antibiotic",0.24714321721896,2.4542,FALSE,NA
+"Gluconapoleiferin","Carbohydrate metabolism",0.250892433534008,0.33465,FALSE,NA
+"62FTA","Other/Unclassified",0.257744220785704,-0.72552,FALSE,NA
+"Microcolin B","Natural product (marine/fungal)",0.288659308426314,0.025787,FALSE,NA
+"Cyanidin 3-(6''-acetyl)galactoside","Flavonoid biosynthesis",0.2995126024535,-0.46186,FALSE,NA
+"Gancaonin M","Secondary metabolite/Terpenoid",0.300972666269102,-0.97148,FALSE,NA
+"Baccatin I","Terpenoid/ Taxane biosynthesis",0.303777168112017,-0.69079,FALSE,NA
+"Taxinine A","Terpenoid/ Taxane biosynthesis",0.310963619331443,-0.45869,FALSE,NA
+"Scopularide D","Natural product (marine/fungal)",0.316274831081029,-0.57853,FALSE,NA
+"Sanguinarine","Other/Unclassified",0.319936503906551,-0.71229,FALSE,NA
+"Taxuspine F","Terpenoid/ Taxane biosynthesis",0.32299027317531,2.1579,FALSE,NA
+"Daidzein","Flavonoid biosynthesis",0.328018760420843,6.3859,FALSE,NA
+"Blasticidin S","Cofactor/Vitamin/Antibiotic",0.338158238513491,-0.35346,FALSE,NA
+"Ethionamide","Xenobiotic/Drug metabolism",0.342077690622442,-0.12207,FALSE,NA
+"Daminozide","Xenobiotic/Drug metabolism",0.360435913783277,0.20852,FALSE,NA
+"discorhabdin G","Natural product (marine/fungal)",0.362852630378105,2.5234,FALSE,NA
+"Quercetin-3-O-beta-galactoside","Flavonoid biosynthesis",0.363552501163675,-0.36316,FALSE,NA
+"Cyanidin 3-(6''-p-coumarylsophoroside)-5-glucoside","Flavonoid biosynthesis",0.370415193468237,-0.30035,FALSE,NA
+"(-)-Gallocatechin-3-O-gallate","Flavonoid biosynthesis",0.384403667096769,-0.34457,FALSE,NA
+"Daunorubicin","Cofactor/Vitamin/Antibiotic",0.419830017393887,0.12259,FALSE,NA
+"Fomesafen","Xenobiotic/Drug metabolism",0.420600087749945,-0.35501,FALSE,NA
+"GlcNAcThrNAc","Carbohydrate metabolism",0.420926466925033,-0.30509,FALSE,NA
+"Glabrol","Secondary metabolite/Terpenoid",0.428673357324002,-0.35956,FALSE,NA
+"Florasulam","Xenobiotic/Drug metabolism",0.442937292167396,5.7178,FALSE,NA
+"Kutkoside","Secondary metabolite/Terpenoid",0.45113983460149,-0.23287,FALSE,NA
+"2-[(4,6-diamino-1,3,5-triazin-2-yl)thio]-Ethanesulfonic acid","Fatty acid/Lipid metabolism",0.457985625066951,-0.35385,FALSE,NA
+"Cyclo(Pro-Phe)","Other/Unclassified",0.478474130635931,-0.51515,FALSE,NA
+"Brevifoliol","Terpenoid/ Taxane biosynthesis",0.483938766228738,0.18345,FALSE,NA
+"Taxinine M","Terpenoid/ Taxane biosynthesis",0.487832206846849,-0.082104,FALSE,NA
+"D-Ala","Amino acid metabolism",0.507577246442417,-0.83663,FALSE,NA
+"Scutellarein-7-glucuronide","Flavonoid biosynthesis",0.541240688498908,-0.11968,FALSE,NA
+"Ginsenoside Ro","Secondary metabolite/Terpenoid",0.553640796215831,-0.069217,FALSE,NA
+"L-Cystine","Amino acid metabolism",0.559336772763293,-0.07995,FALSE,NA
+"1,2-Disinapoyl diglucoside","Carbohydrate metabolism",0.59461943845824,-0.068755,FALSE,NA
+"Purine","Amino acid metabolism",0.602380759153061,-1.4161,FALSE,NA
+"Isoliquiritin apioside","Flavonoid biosynthesis",0.624355968733141,-0.061767,FALSE,NA
+"2',4,5'-Trihydroxychalcone","Flavonoid biosynthesis",0.627982641798172,-0.072049,FALSE,NA
+"13-Methylberberine","Other/Unclassified",0.635491858100392,-0.23074,FALSE,NA
+"Naringenin-7-O-neohesperidoside","Flavonoid biosynthesis",0.647550865368504,-0.070766,FALSE,NA
+"7-epi-Paclitaxel","Terpenoid/ Taxane biosynthesis",0.657396249155823,-0.17118,FALSE,NA
+"10-Deacetyl-7-xylosylpaclitaxel","Terpenoid/ Taxane biosynthesis",0.693641256410515,-0.071083,FALSE,NA
+"Diflunisal","Xenobiotic/Drug metabolism",0.696607913315216,-0.076177,FALSE,NA
+"Glycyrrhizate","Fatty acid/Lipid metabolism",0.700771910167129,-0.054621,FALSE,NA
+"Acetylendicarboxylate","Fatty acid/Lipid metabolism",0.714442340719677,-0.059478,FALSE,NA
+"Glycyrrhetinate","Fatty acid/Lipid metabolism",0.727471810322023,-0.091849,FALSE,NA
+"Posthumulone","Natural product (marine/fungal)",0.728631336548961,-0.0927,FALSE,NA
+"TRH","Other/Unclassified",0.746636356149523,-0.046643,FALSE,NA
+"Ribostamycin","Cofactor/Vitamin/Antibiotic",0.764250729394267,-0.068802,FALSE,NA
+"L-Saccharopine","Amino acid metabolism",0.795108569606086,-0.1113,FALSE,NA
+"nPFOA","Other/Unclassified",0.84014849372273,-0.036885,FALSE,NA
+"Sorbitol 6-phosphate","Carbohydrate metabolism",0.873150416998394,-0.013971,FALSE,NA
+"102FTA","Other/Unclassified",0.882462596892695,-0.01584,FALSE,NA
+"Apigenin","Flavonoid biosynthesis",0.921773237998212,0.050688,FALSE,NA
+"Catechin-(4alpha->6)-gallocatechin","Flavonoid biosynthesis",0.961960646952732,0.45915,FALSE,NA
+"Pelargonidin 3-O-rutinoside","Flavonoid biosynthesis",0.969279034512076,1.3701,FALSE,NA
+"N-Glycolylneuraminate","Carbohydrate metabolism",0.970182189696994,0.097002,FALSE,NA
+"Morin","Flavonoid biosynthesis",0.971357930692059,-0.0052283,FALSE,NA
+"Geyerline","Natural product (marine/fungal)",0.979196169992233,1.3777,FALSE,NA
+"Herbacetin 8-O-xylose-3-O-glucose","Flavonoid biosynthesis",0.996171964733883,-0.0089302,FALSE,NA
