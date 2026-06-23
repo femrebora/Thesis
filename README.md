@@ -1,9 +1,5 @@
 # Thesis
 
-Companion repository for the doctoral thesis *"Investigation of TRAIL Resistance
-Mechanisms in Glioblastoma via Metabolic Gene CRISPR/Cas9 Screening and
-Multi-Omics Integration"* (PRJ25-131, Cingoz Lab).
-
 ## Repository structure
 
 ```
