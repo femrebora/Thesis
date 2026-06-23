@@ -1,4 +1,4 @@
-# Thesis — Reproducible Analysis Repository
+# Thesis
 
 Companion repository for the doctoral thesis *"Investigation of TRAIL Resistance
 Mechanisms in Glioblastoma via Metabolic Gene CRISPR/Cas9 Screening and
@@ -90,9 +90,3 @@ See `CITATION.cff` (if available) or cite the thesis directly.
 ## License
 
 All rights reserved. Contact the author for permissions.
-
----
-
-**Thesis**: [Final_Master_16.docx] — *Doctoral Dissertation*
-**Author**: [Author Name], [Department], [University]
-**Project**: PRJ25-131, Cingoz Lab
