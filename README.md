@@ -110,6 +110,21 @@ Rscript crispr_screen/scripts/run_crispr_analysis_fdr05.R
 
 ## Significance criterion
 
+The threshold is defined once, as `SIG_THRESH` in `crispr_screen/R/utils.R`.
+To change it, re-derive the gene lists and enrichment tables as well:
+
+```bash
+export THESIS_SIG_THRESH=0.01
+Rscript crispr_screen/scripts/00_derive_gene_lists.R
+Rscript crispr_screen/scripts/00_compute_enrichment.R
+Rscript crispr_screen/scripts/run_crispr_analysis.R
+```
+
+`run_crispr_analysis.R` refuses to render if the gene lists on disk do not match
+the threshold in force, so a partially-updated figure set cannot be produced
+silently. Verify at any time with
+`Rscript crispr_screen/scripts/00_derive_gene_lists.R --check`.
+
 Gene-level CRISPR significance in the thesis figures is the **uncorrected**
 MAGeCK RRA p-value (p < 0.05). No gene in this screen reaches FDR < 0.05 in any
 comparison (smallest observed FDR = 0.425). `docs/methods_and_thresholds.md`

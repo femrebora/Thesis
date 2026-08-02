@@ -74,6 +74,59 @@ normalization methods, and package versions.
 | crispr_screen | Reactome enrichment | Over-representation analysis, BH-adjusted | ReactomePA | **Top 10 by p.adjust, NO significance cutoff** | 7/48 (all genes) and 1/33 (Rpost) metabolic terms reach FDR < 0.05 | Thesis Şekil 4.12 | `11_reactome_enrichment.R` | Fig11_reactome_enrichment_v3.* |
 | crispr_screen | GO enrichment | Over-representation analysis, BH-adjusted | clusterProfiler | **Top 10 by p.adjust, NO significance cutoff**, BP+MF+CC | GO CC yields only 1 term per panel at FDR < 0.05 | Thesis Şekil 4.9-4.10 | `12_go_enrichment.R` | Fig12_GO_*_enrichment_v3.* |
 
+## Changing the significance threshold
+
+The threshold has **one** definition: `SIG_THRESH` in `crispr_screen/R/utils.R`,
+overridable with the `THESIS_SIG_THRESH` environment variable. Figure scripts
+read it; none of them define their own value.
+
+> Before this was centralised, `pval_thresh <- 0.05` was repeated in six scripts
+> and the enrichment gene lists were static files. Editing the threshold in one
+> script changed that figure alone and left the other five — and all of the
+> enrichment figures — on the old value, with nothing visibly failing. That
+> failure mode is now blocked.
+
+To change it safely, all three steps are required:
+
+```bash
+export THESIS_SIG_THRESH=0.01
+Rscript crispr_screen/scripts/00_derive_gene_lists.R     # re-select hit genes
+Rscript crispr_screen/scripts/00_compute_enrichment.R    # recompute enrichment
+Rscript crispr_screen/scripts/run_crispr_analysis.R      # rebuild figures
+```
+
+`run_crispr_analysis.R` verifies before it renders anything that the gene lists
+on disk match the threshold in force. If they do not, it **refuses to run** and
+names the genes that moved, rather than producing a figure set in which the
+gene-level and enrichment panels describe different gene sets. Check the state
+at any time without writing:
+
+```bash
+Rscript crispr_screen/scripts/00_derive_gene_lists.R --check
+```
+
+Gene-list membership is always defined on the **nominal** p-value, whatever
+`THESIS_SIG_METRIC` is set to: which genes entered enrichment is a property of
+the screen's hit-calling, while the FDR mode changes only how enrichment *terms*
+are filtered for display. This is what lets `run_crispr_analysis_fdr05.R` operate
+on the thesis gene sets, as intended.
+
+### What is still hardcoded
+
+These are fixed inputs, not derived, and a threshold change does **not** update
+them. Revisit them by hand if the hit list ever changes:
+
+| Constant | File | Purpose |
+|---|---|---|
+| `KNOWN_DEPLETED`, `KNOWN_ENRICHED` | `crispr_screen/R/utils.R` | annotation helper lists |
+| `FUNC_ANNOT`, `FUNC_ANNOT_TR` | `crispr_screen/R/utils.R` | per-gene function text |
+| `GENES_DEPLETED/ENRICHED/OTHER` | `tcga_gbm/analysis/config.R` | the 12-gene TCGA panel |
+| `GENE_LFC_RESISTANT` | `tcga_gbm/analysis/config.R` | thesis Table 4.2 LFC values |
+| `summary_significant_genes.csv` | `crispr_screen/results/` | 25-gene summary table |
+
+The TCGA panel was chosen from the CRISPR hits at p < 0.05; changing the CRISPR
+threshold does not and should not silently re-run the TCGA survival analysis.
+
 ## Reproducibility note: enrichment tables and KEGG drift
 
 `crispr_screen/scripts/00_compute_enrichment.R` recomputes the six enrichment
