@@ -1,0 +1,7 @@
+FASTQC:
+  fastqc: 0.12.1
+MAGECK_COUNT:
+  mageck: 0.5.9.5
+Workflow:
+    nf-core/crisprseq: v2.3.0-g0e9f915
+    Nextflow: 25.10.4
