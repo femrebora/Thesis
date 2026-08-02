@@ -27,7 +27,7 @@ make_volcano <- function(comp) {
     # Target x: Azalan (blue) labels to the left edge, Artan (orange) to the right.
     mutate(target_x = ifelse(LFC < 0, xr[1] - 0.5, xr[2] + 0.5))
 
-  ggplot(df, aes(LFC, log10p)) +
+  p <- ggplot(df, aes(LFC, log10p)) +
     geom_vline(xintercept = 0, linetype = "dashed",
                colour = "grey80", linewidth = 0.25) +
     geom_hline(yintercept = -log10(pval_thresh), linetype = "dashed",
@@ -36,8 +36,13 @@ make_volcano <- function(comp) {
     geom_point(data = subset(df, !hl), colour = C_NS,
                size = 1.3, alpha = 0.5) +
     geom_point(data = subset(df, hl), aes(colour = direction),
-               size = 2.2, alpha = 0.9) +
-    geom_text_repel(data = lab_df, aes(label = id, colour = direction),
+               size = 2.2, alpha = 0.9)
+
+  # Under a strict FDR criterion no gene may clear the threshold. Keep the full
+  # data cloud and the threshold line visible, and state the null result on the
+  # panel rather than emitting a blank figure.
+  if (nrow(lab_df) > 0) {
+    p <- p + geom_text_repel(data = lab_df, aes(label = id, colour = direction),
                     size = 2.9, fontface = "italic", family = BASE_FAMILY,
                     nudge_x = lab_df$target_x - lab_df$LFC,
                     direction = "y",
@@ -47,15 +52,23 @@ make_volcano <- function(comp) {
                     segment.size = 0.25, segment.colour = "grey60",
                     segment.alpha = 0.7,
                     box.padding = 0.3, point.padding = 0.2,
-                    seed = 42, show.legend = FALSE) +
+                    seed = 42, show.legend = FALSE)
+  } else {
+    p <- p + annotate("text", x = mean(xr), y = Inf, vjust = 1.8,
+                      label = sprintf("%s < %.2f kriterini karşılayan gen yok",
+                                      SIG_SHORT_TR, pval_thresh),
+                      size = 2.9, colour = "#777777", family = BASE_FAMILY)
+  }
+
+  p +
     scale_colour_manual(values = DIRECTION_COLORS, name = "Yön",
                         drop = FALSE) +
     scale_x_continuous(expand = expansion(mult = 0.22)) +
     labs(
       title    = COMPARISONS[comp],
-      subtitle = sprintf("%d gen (p < %.2f)", n_hl, pval_thresh),
+      subtitle = sprintf("%d gen (%s < %.2f)", n_hl, SIG_SHORT_TR, pval_thresh),
       x = bquote(Log[2]~"kat değişimi"),
-      y = bquote(-Log[10]~"p-değeri")
+      y = bquote(-Log[10]~.(SIG_LABEL_TR))
     ) +
     theme_thesis()
 }

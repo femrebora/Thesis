@@ -151,16 +151,29 @@ CC_EXCLUDE <- c(
 
 # ---- build one figure per ontology ---------------------------------------------
 build_go_figure <- function(ont, exclude_patterns, top_n = 10) {
-  go_ont <- go_df %>%
+  go_pool <- go_df %>%
     filter(ONTOLOGY == ont) %>%
     filter(!grepl(paste(exclude_patterns, collapse = "|"),
-                  Description, ignore.case = TRUE)) %>%
+                  Description, ignore.case = TRUE))
+
+  # See 10_kegg_enrichment.R: baseline ranks the top 10 by adjusted p with no
+  # significance cutoff; THESIS_SIG_METRIC=fdr adds a hard p.adjust < SIG_THRESH filter.
+  if (SIG_METRIC == "fdr") {
+    go_pool <- go_pool %>% filter(p.adjust < SIG_THRESH)
+  }
+
+  go_ont <- go_pool %>%
     group_by(GeneSetTR) %>%
     slice_min(p.adjust, n = top_n, with_ties = FALSE) %>%
     ungroup() %>%
     mutate(
       log10padj   = -log10(p.adjust),
-      Description = str_wrap(Description, width = 50)
+      label_raw = if_else(
+        Description_TR != "" & !is.na(Description_TR),
+        paste0(Description_TR, "\n(", Description, ")"),
+        Description
+      ),
+      Description = str_wrap(label_raw, width = 58)
     )
 
   go_ont <- go_ont %>%
@@ -168,28 +181,50 @@ build_go_figure <- function(ont, exclude_patterns, top_n = 10) {
     mutate(Description = forcats::fct_reorder(Description, log10padj)) %>%
     ungroup()
 
+  empty_panels <- setdiff(levels(go_df$GeneSetTR),
+                          as.character(unique(go_ont$GeneSetTR)))
+  # data.frame() recycles scalars only against a non-zero row count, so build
+  # the annotation frame explicitly at length(empty_panels) (often 0).
+  n_empty <- length(empty_panels)
+  empty_df <- data.frame(
+    GeneSetTR   = factor(empty_panels, levels = levels(go_df$GeneSetTR)),
+    Description = rep("", n_empty),
+    # Centre the note on the shared x range so it is never clipped
+    # at the panel edge (the x scale is shared across facets).
+    log10padj   = rep(max(go_ont$log10padj, na.rm = TRUE) / 2, n_empty),
+    label       = rep(sprintf("FDR < %.2f kriterini karşılayan terim yok", SIG_THRESH), n_empty)
+  )
+
   p <- ggplot(go_ont, aes(x = log10padj, y = Description, fill = log10padj)) +
     geom_col(width = 0.7, alpha = 0.9) +
     scale_fill_gradientn(
       colours = c("#FEE0D2", "#FC9272", "#DE2D26", "#A50F15"),
       guide = "none"
     ) +
-    facet_wrap(~ GeneSetTR, ncol = 1, scales = "free_y") +
-    scale_x_continuous(expand = expansion(mult = c(0, 0.12))) +
+    facet_wrap(~ GeneSetTR, ncol = 1, scales = "free_y", drop = FALSE) +
+    scale_x_continuous(expand = expansion(mult = c(0, 0.14))) +
     labs(
-      x = expression(-Log[10]~"(düzeltilmiş p-değeri)"),
+      x = bquote(-Log[10]~.(paste0("(", SIG_LABEL_TR, ")"))),
       y = NULL
     ) +
     theme_thesis() +
     theme(
       panel.grid.major.y = element_blank(),
       strip.text = element_text(face = "bold", size = 10),
+      axis.text.y = element_text(size = 7, lineheight = 0.85),
       plot.title = element_blank()
     )
 
+  if (nrow(empty_df) > 0) {
+    p <- p + geom_text(data = empty_df,
+                       aes(x = log10padj, y = Description, label = label),
+                       inherit.aes = FALSE, hjust = 0.5, size = 3.1,
+                       colour = "#777777", family = BASE_FAMILY)
+  }
+
   n_terms <- length(unique(go_ont$Description))
   save_figure(p, paste0("Fig12_GO_", ont, "_enrichment_v3"), suffix = "",
-              width = 8, height = max(5, n_terms * 0.33 + 2))
+              width = 10, height = max(6, n_terms * 0.40 + 2.5))
 }
 
 build_go_figure("BP", BP_EXCLUDE, top_n = 10)

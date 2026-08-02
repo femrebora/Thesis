@@ -37,6 +37,27 @@ REVISED_DIR <- FIG_DIR                        # canonical figure output (thesis-
 TAB_DIR     <- file.path(.MODULE_DIR, "results")
 GENE_DIR    <- file.path(DATA_DIR, "gene_lists")
 
+# -- Significance criterion (configurable) -------------------------------------
+# The thesis baseline calls a gene significant on its NOMINAL MAGeCK RRA p-value
+# (p < 0.05, uncorrected). The whole figure set can be rebuilt under a
+# Benjamini-Hochberg FDR acceptance criterion instead, without touching any
+# figure script, by exporting:
+#
+#   THESIS_SIG_METRIC=fdr  THESIS_SIG_THRESH=0.05  THESIS_SIG_SUFFIX=_fdr05
+#
+# See scripts/run_crispr_analysis_fdr05.R. Outputs then carry SIG_SUFFIX so the
+# baseline figures are never overwritten.
+SIG_METRIC <- tolower(Sys.getenv("THESIS_SIG_METRIC", "pvalue"))
+if (!SIG_METRIC %in% c("pvalue", "fdr")) {
+  stop("THESIS_SIG_METRIC must be 'pvalue' or 'fdr', got: ", SIG_METRIC)
+}
+SIG_THRESH <- as.numeric(Sys.getenv("THESIS_SIG_THRESH", "0.05"))
+SIG_SUFFIX <- Sys.getenv("THESIS_SIG_SUFFIX", "")
+
+# Turkish axis / caption token for whichever statistic is in force.
+SIG_LABEL_TR <- if (SIG_METRIC == "fdr") "FDR" else "p-değeri"
+SIG_SHORT_TR <- if (SIG_METRIC == "fdr") "FDR" else "p"
+
 # -- Colour palette ------------------------------------------------------------
 # Defined ONCE here and reused everywhere. Two independent palettes so a hue
 # never carries two meanings across the figure set.
@@ -121,19 +142,36 @@ load_gene_summary <- function(comparison, pval_thresh = 0.05) {
   if (!file.exists(path)) stop("Missing: ", path)
 
   df <- read_tsv(path, show_col_types = FALSE)
+
+  # Raw MAGeCK statistics are always kept under *_raw / *_fdr names so any
+  # script can reach either tail on either scale.
   df <- df %>%
     mutate(
-      LFC     = `neg|lfc`,
-      neg_p   = `neg|p-value`,            # depletion test (significant when LFC < 0)
-      pos_p   = `pos|p-value`,            # enrichment test (significant when LFC > 0)
-      pval    = pmin(`neg|p-value`, `pos|p-value`),
-      fdr     = pmin(`neg|fdr`, `pos|fdr`),
-      log10p  = -log10(pmax(pval, 1e-100)),
-      sig     = pval < pval_thresh,
-      direction = ifelse(LFC < 0, "Depleted", "Enriched"),
+      LFC       = `neg|lfc`,
+      neg_p_raw = `neg|p-value`,          # depletion test (significant when LFC < 0)
+      pos_p_raw = `pos|p-value`,          # enrichment test (significant when LFC > 0)
+      neg_fdr   = `neg|fdr`,
+      pos_fdr   = `pos|fdr`,
+      pval_raw  = pmin(`neg|p-value`, `pos|p-value`),
+      fdr       = pmin(`neg|fdr`, `pos|fdr`)
+    )
+
+  # neg_p / pos_p / pval carry the statistic CURRENTLY IN FORCE (see SIG_METRIC).
+  # Downstream figure scripts read these three columns only, so switching the
+  # acceptance criterion needs no change in any figure script.
+  if (SIG_METRIC == "fdr") {
+    df <- df %>% mutate(neg_p = neg_fdr, pos_p = pos_fdr, pval = fdr)
+  } else {
+    df <- df %>% mutate(neg_p = neg_p_raw, pos_p = pos_p_raw, pval = pval_raw)
+  }
+
+  df %>%
+    mutate(
+      log10p     = -log10(pmax(pval, 1e-100)),
+      sig        = pval < pval_thresh,
+      direction  = ifelse(LFC < 0, "Depleted", "Enriched"),
       comparison = COMPARISONS[comparison]
     )
-  df
 }
 
 # -- Save helper -- PDF (cairo, fonts embedded) + 600-dpi PNG ------------------
@@ -142,7 +180,7 @@ load_gene_summary <- function(comparison, pval_thresh = 0.05) {
 save_figure <- function(plot, name, width = 7, height = 5, dpi = 600,
                         outdir = REVISED_DIR, suffix = "") {
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
-  stem <- paste0(name, suffix)
+  stem <- paste0(name, suffix, SIG_SUFFIX)
 
   ggsave(file.path(outdir, paste0(stem, ".pdf")), plot,
          width = width, height = height, device = cairo_pdf, bg = "white")
@@ -158,7 +196,7 @@ save_figure <- function(plot, name, width = 7, height = 5, dpi = 600,
 save_grid_figure <- function(draw_fn, name, width = 7, height = 5, dpi = 600,
                              outdir = REVISED_DIR, suffix = "") {
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
-  stem <- paste0(name, suffix)
+  stem <- paste0(name, suffix, SIG_SUFFIX)
 
   cairo_pdf(file.path(outdir, paste0(stem, ".pdf")), width = width, height = height)
   draw_fn(); dev.off()

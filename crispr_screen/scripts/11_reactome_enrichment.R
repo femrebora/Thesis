@@ -49,6 +49,13 @@ reac_metabolic <- reac_df %>%
   filter(!grepl(paste(NON_METABOLIC_PATTERNS, collapse = "|"),
                 Description, ignore.case = TRUE))
 
+# ---- acceptance criterion ------------------------------------------------------
+# See 10_kegg_enrichment.R: baseline shows the top 10 by adjusted p with no
+# significance cutoff; THESIS_SIG_METRIC=fdr adds a hard p.adjust < SIG_THRESH filter.
+if (SIG_METRIC == "fdr") {
+  reac_metabolic <- reac_metabolic %>% filter(p.adjust < SIG_THRESH)
+}
+
 # ---- panel labels --------------------------------------------------------------
 GENESET_TR <- c(
   all_25   = "Tüm genler",
@@ -64,13 +71,33 @@ reac_top <- reac_metabolic %>%
   ungroup() %>%
   mutate(
     log10padj   = -log10(p.adjust),
-    Description = str_wrap(Description, width = 48)
+    label_raw = if_else(
+      Description_TR != "" & !is.na(Description_TR),
+      paste0(Description_TR, "\n(", Description, ")"),
+      Description
+    ),
+    Description = str_wrap(label_raw, width = 55)
   )
 
 reac_top <- reac_top %>%
   group_by(GeneSetTR) %>%
   mutate(Description = forcats::fct_reorder(Description, log10padj)) %>%
   ungroup()
+
+# ---- empty panels --------------------------------------------------------------
+empty_panels <- setdiff(levels(reac_metabolic$GeneSetTR),
+                        as.character(unique(reac_top$GeneSetTR)))
+# data.frame() recycles scalars only against a non-zero row count, so build
+# the annotation frame explicitly at length(empty_panels) (often 0).
+n_empty <- length(empty_panels)
+empty_df <- data.frame(
+  GeneSetTR   = factor(empty_panels, levels = levels(reac_metabolic$GeneSetTR)),
+  Description = rep("", n_empty),
+  # Centre the note on the shared x range so it is never clipped
+  # at the panel edge (the x scale is shared across facets).
+  log10padj   = rep(max(reac_top$log10padj, na.rm = TRUE) / 2, n_empty),
+  label       = rep(sprintf("FDR < %.2f kriterini karşılayan yolak yok", SIG_THRESH), n_empty)
+)
 
 # ---- plot ----------------------------------------------------------------------
 p <- ggplot(reac_top, aes(x = log10padj, y = Description, fill = log10padj)) +
@@ -79,18 +106,26 @@ p <- ggplot(reac_top, aes(x = log10padj, y = Description, fill = log10padj)) +
     colours = c("#FEE0D2", "#FC9272", "#DE2D26", "#A50F15"),
     guide = "none"
   ) +
-  facet_wrap(~ GeneSetTR, ncol = 1, scales = "free_y") +
+  facet_wrap(~ GeneSetTR, ncol = 1, scales = "free_y", drop = FALSE) +
   scale_x_continuous(expand = expansion(mult = c(0, 0.12))) +
   labs(
-    x = expression(-Log[10]~"(düzeltilmiş p-değeri)"),
+    x = bquote(-Log[10]~.(paste0("(", SIG_LABEL_TR, ")"))),
     y = NULL
   ) +
   theme_thesis() +
   theme(
     panel.grid.major.y = element_blank(),
     strip.text = element_text(face = "bold", size = 10),
+    axis.text.y = element_text(size = 7.5, lineheight = 0.9),
     plot.title = element_blank()
   )
 
+if (nrow(empty_df) > 0) {
+  p <- p + geom_text(data = empty_df,
+                     aes(x = log10padj, y = Description, label = label),
+                     inherit.aes = FALSE, hjust = 0.5, size = 3.1,
+                     colour = "#777777", family = BASE_FAMILY)
+}
+
 save_figure(p, "Fig11_reactome_enrichment_v3", suffix = "",
-            width = 8, height = max(6, length(unique(reac_top$Description)) * 0.33 + 2))
+            width = 10, height = max(7, length(unique(reac_top$Description)) * 0.38 + 2.5))

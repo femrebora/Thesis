@@ -18,6 +18,23 @@ make_bar <- function(comp) {
     arrange(direction, abs_lfc) %>%
     mutate(gene = factor(id, levels = id))
 
+  # Empty hit set (possible under a strict FDR criterion): draw a labelled
+  # null-result panel so the figure still reads as a deliberate result.
+  if (nrow(df) == 0) {
+    return(
+      ggplot() +
+        annotate("text", x = 0, y = 0, size = 3.1, colour = "#777777",
+                 family = BASE_FAMILY, lineheight = 1.3,
+                 label = sprintf("%s < %.2f kriterini\nkarşılayan gen yok",
+                                 SIG_SHORT_TR, pval_thresh)) +
+        labs(title = COMPARISONS[comp],
+             x = bquote(Log[2]~"kat değişimi"), y = NULL) +
+        theme_thesis() +
+        theme(axis.text = element_blank(), axis.ticks = element_blank(),
+              axis.line = element_blank(), panel.grid = element_blank())
+    )
+  }
+
   ggplot(df, aes(LFC, gene, fill = direction)) +
     geom_vline(xintercept = 0, linetype = "dotted", colour = "grey75",
                linewidth = 0.25) +

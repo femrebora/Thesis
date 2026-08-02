@@ -20,6 +20,22 @@ for (comp in names(COMPARISONS)) {
   all_genes <- union(all_genes, df$id[df$sig])
 }
 
+# Under a strict FDR criterion the significant-gene set can be empty. A heatmap
+# with zero rows cannot be drawn, so emit an explicit null-result panel instead
+# of failing or writing a blank canvas.
+if (length(all_genes) == 0) {
+  save_grid_figure(function() {
+    grid::grid.newpage()
+    grid::grid.text(
+      sprintf("%s < %.2f kriterini karşılayan gen bulunmadığından\nısı haritası oluşturulamamıştır.",
+              SIG_SHORT_TR, pval_thresh),
+      gp = gpar(fontsize = 11, col = "#555555", fontfamily = "sans", lineheight = 1.4))
+  }, "Fig03_heatmap", width = 7, height = 3)
+  message("Fig03: 0 genes at ", SIG_SHORT_TR, " < ", pval_thresh,
+          " — null-result panel written.")
+  quit(save = "no", status = 0)
+}
+
 mat <- do.call(cbind, lapply(names(COMPARISONS), function(cn) {
   df <- gene_data[[cn]]
   setNames(df$LFC, df$id)[all_genes]

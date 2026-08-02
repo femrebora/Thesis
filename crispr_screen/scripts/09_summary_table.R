@@ -25,6 +25,21 @@ gene_minp <- bind_rows(lapply(gene_data, function(d) d %>% select(id, pval, sig)
 top_genes <- gene_minp %>% filter(any_sig) %>% arrange(min_pval) %>%
   slice_head(n = top_n) %>% pull(id)
 
+# A strict FDR criterion can leave the candidate set empty. Emit a labelled
+# null-result panel rather than building a zero-row table grob.
+if (length(top_genes) == 0) {
+  save_grid_figure(function() {
+    grid::grid.newpage()
+    grid::grid.text(
+      sprintf("%s < %.2f kriterini karşılayan gen bulunmadığından\nözet tablo oluşturulamamıştır.",
+              SIG_SHORT_TR, pval_thresh),
+      gp = gpar(fontsize = 11, col = "#555555", fontfamily = "sans", lineheight = 1.4))
+  }, "Fig09_summary_table", width = 8, height = 3)
+  message("Fig09: 0 genes at ", SIG_SHORT_TR, " < ", pval_thresh,
+          " — null-result panel written.")
+  quit(save = "no", status = 0)
+}
+
 # Wide Log2 FC matrix -- unmeasured cells left blank.
 lfc_wide <- sapply(names(COMPARISONS), function(cn) {
   v <- setNames(gene_data[[cn]]$LFC, gene_data[[cn]]$id)[top_genes]
@@ -50,12 +65,12 @@ for (cn in names(COMPARISONS)) {
   disp[[wrap_labels(COMPARISONS[cn], 14)]] <- sprintf("%.1f", lfc_wide[, cn])
   disp[[wrap_labels(COMPARISONS[cn], 14)]][is.na(lfc_wide[, cn])] <- ""
 }
-disp[["p-değeri"]] <- formatC(min_pval_top, format = "e", digits = 1)
+disp[[SIG_LABEL_TR]] <- formatC(min_pval_top, format = "e", digits = 1)
 disp[["İşlev"]]    <- wrap_labels(vapply(top_genes, get_annotation_tr, character(1)), 34)
 
 dir.create(FIG_DIR, showWarnings = FALSE, recursive = TRUE)
 dir.create(TAB_DIR, showWarnings = FALSE, recursive = TRUE)
-write_csv(disp, file.path(TAB_DIR, "top12_significant_genes.csv"))
+write_csv(disp, file.path(TAB_DIR, paste0("top12_significant_genes", SIG_SUFFIX, ".csv")))
 
 # Editable Excel export (v3)
 tryCatch({
@@ -66,7 +81,7 @@ tryCatch({
   setColWidths(wb, sheet = 1, cols = 1:ncol(disp), widths = "auto")
   headerStyle <- createStyle(textDecoration = "bold")
   addStyle(wb, sheet = 1, headerStyle, rows = 1, cols = 1:ncol(disp), gridExpand = TRUE)
-  saveWorkbook(wb, file.path(FIG_DIR, "Fig09_summary_table_revised_v3.xlsx"),
+  saveWorkbook(wb, file.path(FIG_DIR, paste0("Fig09_summary_table_revised_v3", SIG_SUFFIX, ".xlsx")),
                overwrite = TRUE)
   message("Fig09 Excel saved")
 }, error = function(e) message("Excel export skipped: ", conditionMessage(e)))
@@ -140,7 +155,7 @@ tryCatch({
   ft <- flextable(disp) |> fontsize(size = 9, part = "all") |>
     bold(part = "header") |> autofit() |>
     set_caption("Öncelikli 12 aday gen")
-  save_as_docx(ft, path = file.path(FIG_DIR, "Fig09_summary_table.docx"))
+  save_as_docx(ft, path = file.path(FIG_DIR, paste0("Fig09_summary_table", SIG_SUFFIX, ".docx")))
 }, error = function(e) message("DOCX export skipped: ", conditionMessage(e)))
 
 message("Fig09_summary_table saved")

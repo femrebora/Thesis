@@ -56,7 +56,8 @@ cat("\n================ SUMMARY ================\n")
 print(results, row.names = FALSE)
 cat("=========================================\n")
 
-si_path <- file.path(module, "results", "sessionInfo.txt")
+si_path <- file.path(module, "results",
+                     paste0("sessionInfo", Sys.getenv("THESIS_SIG_SUFFIX", ""), ".txt"))
 dir.create(dirname(si_path), showWarnings = FALSE, recursive = TRUE)
 writeLines(capture.output(sessionInfo()), si_path)
 message("Wrote ", si_path)
