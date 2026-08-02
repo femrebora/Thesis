@@ -74,6 +74,26 @@ normalization methods, and package versions.
 | crispr_screen | Reactome enrichment | Over-representation analysis, BH-adjusted | ReactomePA | **Top 10 by p.adjust, NO significance cutoff** | 7/48 (all genes) and 1/33 (Rpost) metabolic terms reach FDR < 0.05 | Thesis Şekil 4.12 | `11_reactome_enrichment.R` | Fig11_reactome_enrichment_v3.* |
 | crispr_screen | GO enrichment | Over-representation analysis, BH-adjusted | clusterProfiler | **Top 10 by p.adjust, NO significance cutoff**, BP+MF+CC | GO CC yields only 1 term per panel at FDR < 0.05 | Thesis Şekil 4.9-4.10 | `12_go_enrichment.R` | Fig12_GO_*_enrichment_v3.* |
 
+## Discrepancy with the thesis text
+
+`F_Emre_Bora_YL_Tez.pdf` states two different criteria in two different places:
+
+| Section | Printed page | Text |
+|---|---|---|
+| Methods §3.7 | 30 | "anlamlılık eşiği yanlış keşif oranı **FDR < 0,25** olarak belirlenmiştir" |
+| Results §4.4 | 35 | "18, … 12 ve … 2 gen **p < 0,05** düzeyinde anlamlı bulunmuştur" |
+| Discussion | 46 | defends the "**FDR < 0,25**" choice as a permissive screening threshold |
+
+**The Results section is the one that matches the code and the data.** The counts
+18 / 12 / 2 reproduce exactly under the direction-concordant nominal p-value rule
+implemented in `01_volcano.R`, and Şekil 4.4 prints "18 gen (p < 0.05)".
+
+The Methods and Discussion statements do not describe what was run. No gene in
+this screen reaches FDR < 0,25 — the smallest observed FDR is 0,425 — so applying
+the stated criterion would yield 0, 0 and 0 genes and leave every gene-level
+figure empty. This repository implements the criterion that produced the thesis
+figures (nominal p < 0,05) and documents the correction outcome separately.
+
 ## Changing the significance threshold
 
 The threshold has **one** definition: `SIG_THRESH` in `crispr_screen/R/utils.R`,
