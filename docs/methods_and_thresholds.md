@@ -74,6 +74,33 @@ normalization methods, and package versions.
 | crispr_screen | Reactome enrichment | Over-representation analysis, BH-adjusted | ReactomePA | **Top 10 by p.adjust, NO significance cutoff** | 7/48 (all genes) and 1/33 (Rpost) metabolic terms reach FDR < 0.05 | Thesis Şekil 4.12 | `11_reactome_enrichment.R` | Fig11_reactome_enrichment_v3.* |
 | crispr_screen | GO enrichment | Over-representation analysis, BH-adjusted | clusterProfiler | **Top 10 by p.adjust, NO significance cutoff**, BP+MF+CC | GO CC yields only 1 term per panel at FDR < 0.05 | Thesis Şekil 4.9-4.10 | `12_go_enrichment.R` | Fig12_GO_*_enrichment_v3.* |
 
+## Reproducibility note: enrichment tables and KEGG drift
+
+`crispr_screen/scripts/00_compute_enrichment.R` recomputes the six enrichment
+tables from the two gene lists, with `pvalueCutoff = 0.1` and BH adjustment and
+no `universe` argument. Re-running it was checked term by term against the
+committed tables:
+
+| Table | terms | IDs match | statistics match |
+|---|---|---|---|
+| `reactome_all_25.csv` | 95 | yes | **exact** |
+| `reactome_Rpost_18.csv` | 73 | yes | **exact** |
+| `go_all_25.csv` | 311 | yes | **exact** |
+| `go_Rpost_18.csv` | 370 | yes | **exact** |
+| `kegg_all_25.csv` | 86 | yes | small drift, see below |
+| `kegg_Rpost_18.csv` | 73 | yes | small drift, see below |
+
+**KEGG is a live database.** `enrichKEGG` fetches the current `hsa` annotation at
+run time, and the human background has grown from **9,399 to 9,421** annotated
+genes since the tables were first produced. For all 86 terms the gene membership
+(`geneID`) and `GeneRatio` are unchanged — only the background denominator moved,
+shifting p-values in the third to fourth decimal (e.g. hsa00983 p = 8.745e-4 →
+8.686e-4). Term ranking and every downstream conclusion are unaffected.
+
+The committed tables hold the values reported in the thesis and should not be
+overwritten casually. To pin KEGG for an exact rerun, use a `KEGG.db`-style
+snapshot or `clusterProfiler::download_KEGG()` cached to a fixed release.
+
 ## Reproducibility note: PDF vs PNG
 
 `cairo_pdf` embeds a creation timestamp, and `save_as_docx` writes a zip with

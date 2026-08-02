@@ -23,15 +23,45 @@ Thesis/
 ├── tests/                          # Validation tests
 ├── examples/                       # Example outputs
 ├── tcga_gbm/                       # Module 1: TCGA-GBM expression & survival
+│   ├── analysis/                   #   Phase 1 — GDC download, expression, Cox survival
+│   │   └── exploratory/            #   PPI, drug, immune, mutation (not in thesis)
+│   ├── scripts/                    #   Phase 2 — figures from precomputed tables
+│   └── results/                    #   Table01–Table04 (committed)
 ├── metabolomics/                   # Module 2: A172 metabolomics profiling
+│   ├── upstream/                   #   MetaboAnalystR session records (provenance)
+│   └── scripts/                    #   figure code
 └── crispr_screen/                  # Module 3: CRISPR/Cas9 metabolic screen
+    ├── upstream/                   #   FASTQ → MAGeCK count → MAGeCK test
+    │   ├── nf-core/                #   nf-core/crisprseq v2.3.0 run
+    │   └── scripts/                #   01–08 + run_all.sh (pipeline of record)
+    ├── scripts/                    #   00 enrichment + 01–12 thesis figures
+    └── results/                    #   enrichment tables, gene summaries
 ```
+
+## Analysis chain, end to end
+
+```
+CRISPR   FASTQ ─▶ upstream/scripts/run_all.sh ─▶ count_table.txt
+                                              ─▶ *.gene_summary.tsv
+                     ─▶ scripts/00_compute_enrichment.R ─▶ results/{kegg,reactome,go}_*.csv
+                     ─▶ scripts/run_crispr_analysis.R   ─▶ Şekil 4.1, 4.3–4.12
+
+TCGA     GDC ─▶ analysis/01_expression_survival.R ─▶ results/.../Table01–04
+                     ─▶ scripts/run_tcga_analysis.R phase2 ─▶ Şekil 4.13–4.15
+```
+
+Each stage is independently runnable from the artefacts the previous one commits,
+so the thesis figures can be rebuilt without re-running the restricted upstream
+steps or re-downloading TCGA.
 
 ## Modules
 
 ### 1. TCGA-GBM (`tcga_gbm/`)
-12-gene expression and survival analysis in TCGA-GBM (TCGA-GBM cohort).
-- **Entry point**: `Rscript tcga_gbm/scripts/run_tcga_analysis.R`
+12-gene expression and survival analysis in the TCGA-GBM cohort.
+- **Phase 1 (data + statistics)**: `cd tcga_gbm/analysis && Rscript 01_expression_survival.R`
+  — downloads from GDC, writes Table01–Table04. Needs network; slow.
+- **Phase 2 (figures)**: `Rscript tcga_gbm/scripts/run_tcga_analysis.R phase2`
+  — reads the committed tables, no download needed.
 - **Key analyses**: RNA-seq expression, median-split Cox PH survival,
   continuous-expression Cox robustness, expression boxplots
 
@@ -39,6 +69,7 @@ Thesis/
 LC-MS metabolomics profiling of A172-S (sensitive) vs A172-R (resistant)
 glioblastoma cell lines (104 metabolites, n=4 per group).
 - **Entry point**: `Rscript metabolomics/scripts/run_metabolomics_analysis.R`
+  (known issue: does not self-terminate — see `metabolomics/upstream/README.md`)
 - **Key analyses**: Median/Log/Pareto normalization, Welch's t-test,
   fold-change analysis, volcano plot, pathway enrichment (SMPDB/KEGG ORA)
 
@@ -48,7 +79,11 @@ library) in A172-R vs A172-S TRAIL-resistant GBM models. This is a focused
 sub-library screen, not a genome-wide screen; the enrichment background is the
 set of genes the library targets (see `load_library_universe()` in
 `crispr_screen/R/utils.R`).
-- **Entry point**: `Rscript crispr_screen/scripts/run_crispr_analysis.R`
+- **Upstream (restricted inputs)**: `cd crispr_screen/upstream/scripts && bash run_all.sh`
+  — FASTQ → MAGeCK count → MAGeCK test. See `crispr_screen/upstream/README.md`.
+- **Enrichment tables**: `Rscript crispr_screen/scripts/00_compute_enrichment.R`
+  — needs network (KEGG REST). Only needed if regenerating the tables.
+- **Figures**: `Rscript crispr_screen/scripts/run_crispr_analysis.R`
 - **Key analyses**: MAGeCK RRA gene-level scoring, volcano plot, ranked LFC,
   heatmap, barplot, QC metrics, sgRNA-level profiles, cross-comparison,
   summary table, KEGG/Reactome/GO enrichment
@@ -63,10 +98,10 @@ cd Thesis
 # 2. Restore R environment
 R -e 'renv::restore()'
 
-# 3. Run analysis modules
-Rscript tcga_gbm/scripts/run_tcga_analysis.R
-Rscript metabolomics/scripts/run_metabolomics_analysis.R
-Rscript crispr_screen/scripts/run_crispr_analysis.R
+# 3. Regenerate the thesis figures from the committed intermediate artefacts.
+#    Neither step needs the restricted raw data or a TCGA download.
+Rscript crispr_screen/scripts/run_crispr_analysis.R    # Şekil 4.1, 4.3–4.12
+Rscript tcga_gbm/scripts/run_tcga_analysis.R phase2    # Şekil 4.13–4.15
 
 # 4. (optional) Rebuild the CRISPR figures under a BH FDR < 0.05 criterion.
 #    Outputs carry a "_fdr05" suffix; baseline figures are never overwritten.
