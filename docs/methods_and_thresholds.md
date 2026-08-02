@@ -74,6 +74,19 @@ normalization methods, and package versions.
 | crispr_screen | Reactome enrichment | Over-representation analysis, BH-adjusted | ReactomePA | **Top 10 by p.adjust, NO significance cutoff** | 7/48 (all genes) and 1/33 (Rpost) metabolic terms reach FDR < 0.05 | Thesis Şekil 4.12 | `11_reactome_enrichment.R` | Fig11_reactome_enrichment_v3.* |
 | crispr_screen | GO enrichment | Over-representation analysis, BH-adjusted | clusterProfiler | **Top 10 by p.adjust, NO significance cutoff**, BP+MF+CC | GO CC yields only 1 term per panel at FDR < 0.05 | Thesis Şekil 4.9-4.10 | `12_go_enrichment.R` | Fig12_GO_*_enrichment_v3.* |
 
+## Reproducibility note: PDF vs PNG
+
+`cairo_pdf` embeds a creation timestamp, and `save_as_docx` writes a zip with
+per-run timestamps. Re-running any pipeline therefore always shows the `.pdf`
+and `.docx` outputs as modified in `git status`, even when nothing about the
+figure changed. **The `.png` outputs are byte-stable** and are the correct
+artefact to diff when checking reproducibility:
+
+```bash
+Rscript crispr_screen/scripts/run_crispr_analysis.R
+git status --short -- '*.png'    # empty == fully reproduced
+```
+
 ## FDR sensitivity analysis (CRISPR module)
 
 The thesis figures call a gene significant on its **uncorrected** MAGeCK RRA
