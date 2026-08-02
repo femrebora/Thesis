@@ -31,6 +31,13 @@ renv/staging/
 *.vcf
 *.vcf.gz
 
+# --- Restricted CRISPR inputs (may be symlinks to a local workspace) ---
+# Derived from restricted sequencing data — never commit. Only gene_lists/ and
+# the metadata template under crispr_screen/data/ are tracked.
+crispr_screen/data/count_table.txt
+crispr_screen/data/*.gene_summary.tsv
+crispr_screen/data/*.sgrna_summary.txt
+
 # --- Raw & intermediate data ---
 *.qs
 *.rds

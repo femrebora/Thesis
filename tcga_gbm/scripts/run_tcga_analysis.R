@@ -72,7 +72,7 @@ if (run_phase %in% c("all", "phase2")) {
 
 cli::cli_h1("TCGA-GBM pipeline complete")
 cli::cli_text("Outputs:")
-cli::cli_li("{.file tcga_gbm/figures/tcga_*.{pdf,png,tiff}}")
+cli::cli_li("{.file tcga_gbm/figures/tcga_*.pdf/png/tiff}")
 cli::cli_li("{.file tcga_gbm/results/01_expression_survival/tables/}")
 cli::cli_li("{.file tcga_gbm/figures/tcga_sagkalim_ozet_tablo.csv}")
 

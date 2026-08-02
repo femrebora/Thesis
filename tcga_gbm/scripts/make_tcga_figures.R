@@ -228,7 +228,7 @@ if (!is.null(expr_try) && nrow(expr_try) >= 8) {
   save_fig(p_box, "ifade_kutu", w = 10, h = 6)
 
 } else {
-  cat("  Expression boxplot skipped (insufficient data). "
+  cat("  Expression boxplot skipped (insufficient data). ",
       "Falling back to summary bar plot from Table01...\n")
 
   expr_sum <- read.csv(file.path(TABLES, "Table01_expression_gene_summary.csv"),
