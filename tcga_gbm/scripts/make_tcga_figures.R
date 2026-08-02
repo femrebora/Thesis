@@ -29,11 +29,15 @@ dir.create(OUT, showWarnings = FALSE, recursive = TRUE)
 DPI       <- 600
 
 # ---- Turkish gene classification (for figure labels) ----
+# Pinned to the submitted thesis (Şekil 4.13-4.15), which prints the legend as
+# "Artmış / Azalmış / Diğer". A later revision relabelled these to
+# "Zenginleşmiş / Tükenmiş"; that wording is not in the thesis, so it is not used
+# here. The gene-to-class assignment itself is unchanged.
 ALL_GENES_TR <- ALL_GENES
 GENE_CLASS_TR <- c(
-  setNames(rep("Tükenmiş",     length(GENES_DEPLETED)), GENES_DEPLETED),
-  setNames(rep("Zenginleşmiş", length(GENES_ENRICHED)), GENES_ENRICHED),
-  setNames(rep("Diğer",        length(GENES_OTHER)),    GENES_OTHER)
+  setNames(rep("Azalmış", length(GENES_DEPLETED)), GENES_DEPLETED),
+  setNames(rep("Artmış",  length(GENES_ENRICHED)), GENES_ENRICHED),
+  setNames(rep("Diğer",   length(GENES_OTHER)),    GENES_OTHER)
 )
 
 # ---- Theme ----
@@ -87,12 +91,12 @@ p_forest <- ggplot(surv, aes(x = cox_HR, y = gene, color = sinif)) +
   theme(
     panel.grid.major.y = element_blank(),
     legend.position    = "right"
-  ) +
-  geom_text(
-    aes(label = sprintf("p = %s", format_pval_tr(cox_p)),
-        x     = cox_CI_upper),
-    hjust = -0.3, size = 3.2, color = "#444444"
   )
+# Pinned to the submitted thesis (Şekil 4.14): the printed forest plot carries no
+# per-gene p-value labels. A later revision annotated each row with
+# `p = format_pval_tr(cox_p)` at x = cox_CI_upper; that annotation also clipped
+# at the right edge on the continuous panel. The p-values remain available in
+# Table02_survival_summary.csv.
 
 save_fig(p_forest, "cox_orman", w = 10.5, h = 6.5)
 
@@ -117,20 +121,24 @@ p_cont <- ggplot(rob, aes(x = cont_HR_per_SD, y = gene, color = sinif)) +
   geom_point(size = 3.5, alpha = 0.9) +
   geom_errorbarh(aes(xmin = cont_CI_SD_lower, xmax = cont_CI_SD_upper),
                  height = 0.2, linewidth = 0.8) +
-  scale_x_log10() +
+  # Pinned to the submitted thesis (Şekil 4.15): explicit breaks at 0.8/0.9/1.0
+  # with period decimals, leaving the right of the panel unlabelled, and the
+  # short axis title. A later revision used a bare scale_x_log10() (which on the
+  # current scales version yields 1.0/1.2/1.4) and the longer "1 SS ifade artışı
+  # başına" title. Underlying HR values are unchanged either way.
+  scale_x_log10(limits = c(0.75, 1.80), breaks = c(0.8, 0.9, 1.0),
+                labels = c("0.8", "0.9", "1.0")) +
   scale_color_manual(values = class_colors_tr, name = "Gen sınıfı") +
-  labs(x = "HR (1 SS ifade artışı başına, log ölçeği)", y = NULL) +
+  labs(x = "HR (log ölçeği)", y = NULL) +
   theme_tez +
   theme(
     panel.grid.major.y = element_blank(),
     legend.position    = "right"
-  ) +
-  geom_text(
-    aes(label = sprintf("p = %s%s", format_pval_tr(cont_p), yildiz),
-        x     = cont_CI_SD_upper),
-    hjust = -0.3, size = 3.2, color = "#444444",
-    fontface = ifelse(rob$cont_adj_p < 0.05, 2, 1)
   )
+# Pinned to the submitted thesis (Şekil 4.15): no per-gene p-value labels. The
+# later revision's annotation was clipped at the right edge here ("p", "p = 3"),
+# so removing it also fixes that defect. FDR-significant genes are identified in
+# Table04_survival_robustness.csv (cont_adj_p).
 
 save_fig(p_cont, "surekli_cox_orman", w = 10.5, h = 6.5)
 

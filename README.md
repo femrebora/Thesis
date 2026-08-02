@@ -10,8 +10,9 @@
 Thesis/
 ├── README.md                       # This file
 ├── .gitignore                      # Data protection rules
-├── .Rprofile                       # renv auto-load
-├── renv.lock                       # Locked R environment
+├── .Rprofile                       # renv auto-load (optional; degrades gracefully)
+├── ENVIRONMENT.txt                 # exact package versions of the figure run
+├── tools/check_environment.R       # verify your versions against the above
 ├── shared/                         # Cross-module utilities
 │   ├── R/                          # Shared R functions
 │   └── plotting/                   # Shared plotting themes
@@ -95,8 +96,8 @@ set of genes the library targets (see `load_library_universe()` in
 git clone <repo-url>
 cd Thesis
 
-# 2. Restore R environment
-R -e 'renv::restore()'
+# 2. Check your R package versions against the ones that produced the figures
+Rscript tools/check_environment.R
 
 # 3. Regenerate the thesis figures from the committed intermediate artefacts.
 #    Neither step needs the restricted raw data or a TCGA download.
@@ -134,10 +135,17 @@ FDR-corrected figure set.
 ## Reproducibility
 
 - **R version**: 4.4.2 (2024-10-31)
-- **Environment**: Managed via [`renv`](https://rstudio.github.io/renv/)
+- **Environment**: exact package versions are recorded in `ENVIRONMENT.txt`.
+  Verify yours with `Rscript tools/check_environment.R` before trusting a
+  regenerated figure. ggplot2 and scales in particular own axis-break selection
+  and panel layout, so a version bump can shift a figure cosmetically without
+  changing any underlying value.
 - **Key packages**: TCGAbiolinks, MetaboAnalystR (v4.0.0), MAGeCK (v0.5.9.5),
-  ggplot2, survival, survminer, EnhancedVolcano, mixOmics
+  ggplot2, survival, survminer, clusterProfiler, ComplexHeatmap
 - **Path anchoring**: All scripts use `here::here()` — run from repo root
+- **Determinism**: verified by running the CRISPR pipeline three times in a fresh
+  clone on a different path — all PNGs byte-identical. Compare `.png` outputs,
+  never `.pdf`/`.docx`, which embed per-run timestamps.
 
 ## Data availability
 

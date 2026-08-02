@@ -42,8 +42,8 @@ GENE_CLASS <- c(
 
 # -- Turkish labels (for figure output) -------------------------------------------
 GENE_CLASS_TR <- c(
-  setNames(rep("Tükenmiş",      length(GENES_DEPLETED)), GENES_DEPLETED),
-  setNames(rep("Zenginleşmiş",  length(GENES_ENRICHED)), GENES_ENRICHED),
+  setNames(rep("Azalmış", length(GENES_DEPLETED)), GENES_DEPLETED),
+  setNames(rep("Artmış",  length(GENES_ENRICHED)), GENES_ENRICHED),
   setNames(rep("Diğer",         length(GENES_OTHER)),    GENES_OTHER)
 )
 
@@ -127,11 +127,12 @@ gene_class_palette <- c(
   "Other"    = "#999999"   # grey
 )
 
-# Turkish-label palette (matches gene_class_palette values)
+# Turkish-label palette (matches gene_class_palette values).
+# Keys pinned to the thesis legend wording — see make_tcga_figures.R.
 class_colors_tr <- c(
-  "Zenginleşmiş" = "#0072B2",  # blue
-  "Tükenmiş"     = "#D55E00",  # vermillion
-  "Diğer"        = "#999999"   # grey
+  "Artmış"  = "#0072B2",  # blue
+  "Azalmış" = "#D55E00",  # vermillion
+  "Diğer"   = "#999999"   # grey
 )
 
 # KM group colors

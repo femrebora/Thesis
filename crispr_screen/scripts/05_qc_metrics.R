@@ -101,8 +101,12 @@ pD <- ggplot(lorenz, aes(cum_sgrna * 100, cum_reads * 100,
 
 combined <- (pA | pB) / (pC | pD) +
   plot_annotation(
-    title    = "Kütüphane kalite kontrolü",
-    subtitle = "30.197 sgRNA x 13 örnek; yüksek seyrekliğe dikkat edilmelidir.",
+    # Pinned to the submitted thesis (Şekil 4.1). A later revision carried the
+    # title "Kütüphane kalite kontrolü" with the subtitle "30.197 sgRNA x 13
+    # örnek; yüksek seyrekliğe dikkat edilmelidir."; the printed figure does not,
+    # so it is not used here. All four panels are otherwise unchanged.
+    title    = "Kalite skorları",
+    subtitle = NULL,
     tag_levels = "A"
   ) &
   tag_theme() &

@@ -1,0 +1,36 @@
+# Environment manifest — Thesis reproducible analysis repository
+#
+# Exact package versions of the environment that reproduces the submitted
+# thesis figures byte-for-byte. Verify yours with:
+#   Rscript tools/check_environment.R
+#
+R version: R version 4.4.2 (2024-10-31)
+Platform : x86_64-pc-linux-gnu
+Captured : 2026-08-02
+
+PACKAGE                VERSION
+ggplot2                4.0.2
+dplyr                  1.2.0
+readr                  2.2.0
+tidyr                  1.3.2
+stringr                1.6.0
+here                   1.0.2
+patchwork              1.3.2
+scales                 1.4.0
+forcats                1.0.1
+ggrepel                0.9.6
+systemfonts            1.3.1
+ComplexHeatmap         2.22.0
+circlize               0.4.17
+gridExtra              2.3
+gtable                 0.3.6
+openxlsx               4.2.8.1
+flextable              0.9.12
+clusterProfiler        4.14.6
+ReactomePA             1.50.0
+org.Hs.eg.db           3.20.0
+survival               3.8.6
+survminer              0.5.2
+TCGAbiolinks           2.34.1
+cli                    3.6.6
+ragg                   1.5.0
