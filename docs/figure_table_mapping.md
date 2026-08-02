@@ -64,6 +64,36 @@ These tables are produced by `01_expression_survival.R` (Phase 1) before Phase 2
 | Rank comparison | Top hit rank comparison | `metabolomics/scripts/metabolomics_integration_figures.R` | `combined_metabolite_ranking.csv` | `metabolomics/figures/integration_rank_comparison.{pdf,png,tiff}` | ggplot2 rank plot | `Rscript metabolomics/scripts/run_metabolomics_analysis.R` |
 | Pathway dotplot | Integrated pathway dot plot | `metabolomics/scripts/metabolomics_integration_figures.R` | `integrated_pathway_analysis.csv` | `metabolomics/figures/integration_pathway_dotplot.{pdf,png,tiff}` | ggplot2 dotplot | `Rscript metabolomics/scripts/run_metabolomics_analysis.R` |
 
+## Thesis figure numbering (F_Emre_Bora_YL_Tez.pdf)
+
+The `FigNN` script names below are internal; this is how they land in the
+submitted thesis:
+
+| Thesis ref | Script output | Description |
+|---|---|---|
+| Şekil 4.1 | `Fig05_qc_metrics` | Sample-level QC metrics |
+| Şekil 4.2 | — (manual image) | NGS PCR gel photographs |
+| Şekil 4.3 | `Fig06_sgrna_profiles_rebuilt` | sgRNA-level profiles, selected candidate genes |
+| Şekil 4.4 | `Fig01_volcano` | Differential sgRNA representation (volcano) |
+| Şekil 4.5 | `Fig02_rank_lfc` | Ranked log2 fold change |
+| Şekil 4.6 | `Fig03_heatmap` | LFC heatmap of significant shared genes |
+| Şekil 4.7 | `Fig04_barplot` | Significant genes by direction |
+| Şekil 4.8 | `Fig08_cross_comparison` | Pearson correlation across comparisons |
+| Şekil 4.9 | `Fig12_GO_BP_enrichment_v3` | GO biological process enrichment |
+| Şekil 4.10 | `Fig12_GO_MF_enrichment_v3` | GO molecular function enrichment |
+| Şekil 4.11 | `Fig10_kegg_enrichment_v3` | KEGG pathway enrichment |
+| Şekil 4.12 | `Fig11_reactome_enrichment_v3` | Reactome pathway enrichment |
+| Şekil 4.13 | `tcga_cox_orman` (HR panel) | TCGA-GBM candidate-gene hazard ratios |
+| Şekil 4.14 | `tcga_cox_orman` | Median-split Cox forest plot |
+| Şekil 4.15 | `tcga_surekli_cox_orman` | Continuous-expression Cox sensitivity |
+
+Not used in the thesis: `Fig09_summary_table`, `Fig12_GO_CC_enrichment_v3`,
+the non-`_v3` enrichment figures, and the entire metabolomics module.
+
+Every CRISPR figure additionally has a `_fdr05` variant produced by
+`run_crispr_analysis_fdr05.R` (BH FDR < 0.05 acceptance criterion) — see
+`docs/methods_and_thresholds.md` § FDR sensitivity analysis.
+
 ## CRISPR/Cas9 Screen Figures (Şekil 4.1–4.12)
 
 | Thesis ref | Description | Script | Input | Output | Key function | Reproduction |

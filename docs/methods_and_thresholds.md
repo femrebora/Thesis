@@ -60,19 +60,64 @@ normalization methods, and package versions.
 | Module | Step | Method | Package | Threshold | Rationale | Evidence source | Script | Output |
 |--------|------|--------|---------|-----------|-----------|-----------------|--------|--------|
 | crispr_screen | sgRNA counting | nf-core/crisprseq pipeline | Nextflow | — | Standardised CRISPR counting workflow | Thesis §3.6 | External (nf-core) | count_table.txt |
-| crispr_screen | Gene-level scoring | MAGeCK RRA (v0.5.9.5) | MAGeCK | FDR < 0.25 (standard MAGeCK) | Robust Rank Aggregation; standard MAGeCK threshold | Li et al. 2014 | External (MAGeCK) | *.gene_summary.txt |
+| crispr_screen | Gene-level scoring | MAGeCK RRA (v0.5.9.5) | MAGeCK | **Nominal p < 0.05 (UNCORRECTED)** | Robust Rank Aggregation. No gene reaches FDR < 0.05 (or even FDR < 0.25) in any comparison — smallest observed FDR = 0.425 — so the thesis figures report the uncorrected p-value. See §FDR sensitivity below. | Li et al. 2014 | `R/utils.R` `load_gene_summary()` | *.gene_summary.txt |
 | crispr_screen | Direction classification | log2(LFC) sign concordance | utils.R | Concordant: same sign across all sig comparisons | Robust to single-comparison noise | utils.R | `01_volcano.R` | direction column |
-| crispr_screen | Volcano plot | log2(Rpost/R0) vs -log10(FDR) | EnhancedVolcano | |LFC| > 1, FDR < 0.25 | Standard MAGeCK visualization | Thesis §4.x | `01_volcano.R` | Fig01_volcano.* |
+| crispr_screen | Volcano plot | log2(Rpost/R0) vs -log10(p) | ggplot2 + ggrepel | Nominal p < 0.05, direction-concordant | y-axis is the UNCORRECTED p-value; no |LFC| cutoff is applied | Thesis Şekil 4.4 | `01_volcano.R` | Fig01_volcano.* |
 | crispr_screen | Ranked LFC | Horizontal barplot, ranked by LFC | ggplot2 | — | Visualizes magnitude and direction | Thesis §4.x | `02_rank_lfc.R` | Fig02_rank_lfc.* |
 | crispr_screen | Heatmap | ComplexHeatmap with NA preservation | ComplexHeatmap | Z-score scaling | NA cells preserved (not forced to 0) | Thesis §4.x | `03_heatmap.R` | Fig03_heatmap.* |
 | crispr_screen | Barplot | Faceted by direction (Concordant classifier) | ggplot2 | — | Visualizes top significant genes | Thesis §4.x | `04_barplot.R` | Fig04_barplot.* |
 | crispr_screen | QC metrics | Gini coefficient + Lorenz curve | ineq / base R | — | sgRNA-level evenness QC | Thesis §3.6-3.7 | `05_qc_metrics.R` | Fig05_qc_metrics.* |
 | crispr_screen | sgRNA profiles | Per-gene sgRNA-level barplots | ggplot2 | Shared y-axis, IMP1 reference style | Individual sgRNA-level inspection | Thesis §4.x | `06_sgrna_profiles.R` | Fig06_sgrna_profiles.* |
 | crispr_screen | Cross-comparison | Scatter plot Rpost vs Spost LFC | ggplot2 | — | Comparison across resistant/sensitive arms | Thesis §4.x | `08_cross_comparison.R` | Fig08_cross_comparison.* |
-| crispr_screen | Summary table | Top-12 significant genes table | gridExtra / openxlsx | Top 12 by |LFC| | Tabular summary for thesis | Thesis §4.x | `09_summary_table.R` | Fig09_summary_table.* |
-| crispr_screen | KEGG enrichment | Over-representation analysis (FDR) | clusterProfiler | FDR < 0.05, minGSSize=3 | Standard pathway enrichment | Thesis §4.x | `10_kegg_enrichment.R` | Fig10_kegg_enrichment.* |
-| crispr_screen | Reactome enrichment | Over-representation analysis (FDR) | ReactomePA | FDR < 0.05, minGSSize=3 | Standard pathway enrichment | Thesis §4.x | `11_reactome_enrichment.R` | Fig11_reactome_enrichment.* |
-| crispr_screen | GO enrichment | Over-representation analysis (FDR) | clusterProfiler | FDR < 0.05, BP+MF+CC | Standard ontology enrichment | Thesis §4.x | `12_go_enrichment.R` | Fig12_GO_*_enrichment.* |
+| crispr_screen | Summary table | Top-12 significant genes table | gridExtra / openxlsx | Top 12 by minimum nominal p across comparisons | Tabular summary for thesis | Thesis §4.x | `09_summary_table.R` | Fig09_summary_table.* |
+| crispr_screen | KEGG enrichment | Over-representation analysis, BH-adjusted | clusterProfiler | **Top 10 by p.adjust, NO significance cutoff** | Panels may contain terms with p.adjust > 0.05; only 4/31 metabolic KEGG terms reach FDR < 0.05 | Thesis Şekil 4.11 | `10_kegg_enrichment.R` | Fig10_kegg_enrichment_v3.* |
+| crispr_screen | Reactome enrichment | Over-representation analysis, BH-adjusted | ReactomePA | **Top 10 by p.adjust, NO significance cutoff** | 7/48 (all genes) and 1/33 (Rpost) metabolic terms reach FDR < 0.05 | Thesis Şekil 4.12 | `11_reactome_enrichment.R` | Fig11_reactome_enrichment_v3.* |
+| crispr_screen | GO enrichment | Over-representation analysis, BH-adjusted | clusterProfiler | **Top 10 by p.adjust, NO significance cutoff**, BP+MF+CC | GO CC yields only 1 term per panel at FDR < 0.05 | Thesis Şekil 4.9-4.10 | `12_go_enrichment.R` | Fig12_GO_*_enrichment_v3.* |
+
+## FDR sensitivity analysis (CRISPR module)
+
+The thesis figures call a gene significant on its **uncorrected** MAGeCK RRA
+p-value. To document what a conventional multiple-testing correction would do,
+the entire figure set can be rebuilt under a Benjamini-Hochberg **FDR < 0.05**
+acceptance criterion:
+
+```bash
+Rscript crispr_screen/scripts/run_crispr_analysis_fdr05.R
+```
+
+This sets `THESIS_SIG_METRIC=fdr`, `THESIS_SIG_THRESH=0.05` and
+`THESIS_SIG_SUFFIX=_fdr05`; `R/utils.R` swaps the significance statistic and every
+output is written with a `_fdr05` suffix, so no baseline figure is overwritten.
+The identical figure scripts are used in both modes — there is no forked code path.
+
+### Gene-level hit counts by threshold
+
+| Comparison | genes tested | nominal p < 0.05 | FDR < 0.25 | FDR < 0.05 | smallest FDR |
+|---|---|---|---|---|---|
+| Rpost_vs_R0 (Dirençli: Tümör / Gün 0) | 178 | 18 | 0 | **0** | 0.425 |
+| Spost_vs_Rpost (Duyarlı / Dirençli) | 164 | 15 | 0 | **0** | 0.428 |
+| Spost_vs_S0 (Duyarlı: Tümör / Gün 0) | 13 | 2 | 0 | **0** | 0.500 |
+
+No gene survives BH correction at any conventional threshold. Under `_fdr05` the
+gene-level figures (Fig01–Fig04, Fig09) therefore render an explicitly labelled
+null-result panel rather than a blank canvas. Fig05, Fig06 and Fig08 are
+threshold-independent (QC, sgRNA counts, LFC correlation) and are unchanged.
+
+### Enrichment terms surviving FDR < 0.05 (after the metabolic-term filter)
+
+| Figure | Panel | terms shown at baseline | terms at FDR < 0.05 |
+|---|---|---|---|
+| Fig10 KEGG | Tüm genler | 10 | 4 |
+| Fig10 KEGG | Dirençli: Tümör / Gün 0 | 10 | **0 (empty panel)** |
+| Fig11 Reactome | Tüm genler | 10 | 7 |
+| Fig11 Reactome | Dirençli: Tümör / Gün 0 | 10 | 1 |
+| Fig12 GO BP | Tüm genler / Rpost | 10 / 10 | 10 / 10 (47 / 16 available) |
+| Fig12 GO MF | Tüm genler / Rpost | 10 / 10 | 10 / 10 (25 / 67 available) |
+| Fig12 GO CC | Tüm genler / Rpost | 1 / 10 | 1 / 1 |
+
+Enrichment p-values are BH-adjusted by clusterProfiler/ReactomePA regardless of
+mode; the `_fdr05` run adds the hard `p.adjust < 0.05` cutoff that the baseline
+figures deliberately omit.
 
 ## Cross-module notes
 

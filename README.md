@@ -1,5 +1,9 @@
 # Thesis
 
+> **Scope note.** The metabolomics module is retained here for provenance but its
+> results were removed from the submitted thesis (unpublished data). The thesis
+> figure set is produced by the `crispr_screen` and `tcga_gbm` modules only.
+
 ## Repository structure
 
 ```
@@ -39,8 +43,11 @@ glioblastoma cell lines (104 metabolites, n=4 per group).
   fold-change analysis, volcano plot, pathway enrichment (SMPDB/KEGG ORA)
 
 ### 3. CRISPR/Cas9 Screen (`crispr_screen/`)
-Genome-wide CRISPR/Cas9 metabolic gene knockout screen (Sabatini library,
-~3,000 genes) in A172-R vs A172-S TRAIL-resistant GBM models.
+Targeted CRISPR/Cas9 **metabolic-gene** knockout screen (Sabatini metabolic
+library) in A172-R vs A172-S TRAIL-resistant GBM models. This is a focused
+sub-library screen, not a genome-wide screen; the enrichment background is the
+set of genes the library targets (see `load_library_universe()` in
+`crispr_screen/R/utils.R`).
 - **Entry point**: `Rscript crispr_screen/scripts/run_crispr_analysis.R`
 - **Key analyses**: MAGeCK RRA gene-level scoring, volcano plot, ranked LFC,
   heatmap, barplot, QC metrics, sgRNA-level profiles, cross-comparison,
@@ -60,7 +67,19 @@ R -e 'renv::restore()'
 Rscript tcga_gbm/scripts/run_tcga_analysis.R
 Rscript metabolomics/scripts/run_metabolomics_analysis.R
 Rscript crispr_screen/scripts/run_crispr_analysis.R
+
+# 4. (optional) Rebuild the CRISPR figures under a BH FDR < 0.05 criterion.
+#    Outputs carry a "_fdr05" suffix; baseline figures are never overwritten.
+Rscript crispr_screen/scripts/run_crispr_analysis_fdr05.R
 ```
+
+## Significance criterion
+
+Gene-level CRISPR significance in the thesis figures is the **uncorrected**
+MAGeCK RRA p-value (p < 0.05). No gene in this screen reaches FDR < 0.05 in any
+comparison (smallest observed FDR = 0.425). `docs/methods_and_thresholds.md`
+documents the full threshold sensitivity analysis and how to reproduce the
+FDR-corrected figure set.
 
 ## Reproducibility
 
