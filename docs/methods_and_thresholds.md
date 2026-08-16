@@ -32,7 +32,7 @@ normalization methods, and package versions.
 | tcga_gbm | Minimum events | n ≥ 3 events per group | — | MIN_EVENTS_PER_GROUP = 3 | Minimum for meaningful KM curve | config.R | `01_expression_survival.R` §6 | Filtered genes |
 | tcga_gbm | Univariate Cox PH | coxph(Surv(OS.time, OS.event) ~ group) | survival | — | Median-split Cox, primary analysis | Thesis §3.10 | `01_expression_survival.R` §6 | HR, 95% CI, p |
 | tcga_gbm | PH assumption check | cox.zph(cox_fit) | survival | p < 0.05 → PH violated | Schoenfeld residuals test; flagged in output | Thesis §3.10 | `01_expression_survival.R` §6 | PH_assumption_p |
-| tcga_gbm | Continuous Cox (robustness) | coxph(Surv(OS.time, OS.event) ~ expr) | survival | — | Sensitivity analysis; avoids arbitrary dichotomy | Thesis §4.x (Şekil 4.17) | `01_expression_survival.R` §6' | cont_HR_per_SD |
+| tcga_gbm | Continuous Cox (robustness) | coxph(Surv(OS.time, OS.event) ~ expr) | survival | — | Sensitivity analysis; avoids arbitrary dichotomy | Thesis Şekil 4.15 | `01_expression_survival.R` §6' | cont_HR_per_SD |
 | tcga_gbm | Multivariable Cox | coxph(Surv(OS.time, OS.event) ~ expr + age + sex) | survival | — | Adjusted for clinical covariates | Thesis §3.10 | `01_expression_survival.R` §6' | Adjusted HR |
 | tcga_gbm | Optimal cutpoint (EXPLORATORY) | surv_cutpoint() | survminer | — | EXPLORATORY ONLY — not primary; optimism-biased | Thesis §3.10 | `01_expression_survival.R` §6' | cutpoint_logrank_p_EXPLORATORY |
 | tcga_gbm | Multiple testing correction | p.adjust(method = "BH") | stats | FDR < 0.05 | Benjamini-Hochberg FDR across 12 genes | config.R | `01_expression_survival.R` §6' | adjusted_p |
@@ -40,6 +40,10 @@ normalization methods, and package versions.
 | tcga_gbm | Forest plot x-axis | Log-scale with Turkish comma decimals | scales | breaks = 0.5, 0.7, 1.0, 1.3, 1.7 | Turkish locale convention (comma decimal) | make_tcga_figures_TR.R | `make_tcga_figures.R` | tcga_cox_orman.* |
 
 ## Metabolomics Module
+
+> **PROVENANCE ONLY.** Metabolomics results were **not included** in the
+> submitted thesis. Thresholds below document what the retained code/session
+> records used; they are not thesis figure parameters.
 
 | Module | Step | Method | Package | Threshold | Rationale | Evidence source | Script | Output |
 |--------|------|--------|---------|-----------|-----------|-----------------|--------|--------|
@@ -49,7 +53,7 @@ normalization methods, and package versions.
 | metabolomics | Fold-change | FC.Anal(fc.thresh=2.0) | MetaboAnalystR v4.0.0 | |log2FC| > 1 | Standard 2-fold cutoff | TÜBİTAK analysis | `metabolomics_figures.R` | fold_change.csv |
 | metabolomics | T-test | Welch's t-test (unequal var) | MetaboAnalystR v4.0.0 | p < 0.05 (nominal) | Small n (4 vs 4); Welch's robust to unequal variance | Thesis Methods | `metabolomics_figures.R` | t_test.csv |
 | metabolomics | Multiple testing | FDR (Benjamini-Hochberg) | MetaboAnalystR v4.0.0 | FDR < 0.05 | Standard FDR correction | MetaboAnalyst documentation | `metabolomics_figures.R` | ttest_with_foldchange.csv |
-| metabolomics | Volcano plot | log2FC vs -log10(p) | EnhancedVolcano | |log2FC| > 1, p < 0.05 | Standard volcano visualization | Thesis §4.x | `metabolomics_figures.R` | volcano.* |
+| metabolomics | Volcano plot | log2FC vs -log10(p) | EnhancedVolcano | |log2FC| > 1, p < 0.05 | Standard volcano visualization | Provenance (excluded from thesis) | `metabolomics_figures.R` | volcano.* |
 | metabolomics | PCA (EXPLORATORY) | PCA.Anal() | MetaboAnalystR v4.0.0 | — | EXPLORATORY — excluded from thesis | Internal QC | `metabolomics_figures.R` | pca_score2d.* |
 | metabolomics | PLS-DA (EXPLORATORY) | PLSR.Anal(reg=TRUE) | MetaboAnalystR v4.0.0 | — | EXPLORATORY — excluded from thesis | Internal QC | `metabolomics_figures.R` | plsda_*.* |
 | metabolomics | Pathway enrichment (ORA) | Hypergeometric test | MetaboAnalystR v4.0.0 | FDR < 0.05 | Over-representation analysis against SMPDB/KEGG | TÜBİTAK reassessment | `metabolomics_enrichment_pathway.R` | enrichment_dot_plot.* |
@@ -74,62 +78,74 @@ normalization methods, and package versions.
 | crispr_screen | Reactome enrichment | Over-representation analysis, BH-adjusted | ReactomePA | **Top 10 by p.adjust, NO significance cutoff** | 7/48 (all genes) and 1/33 (Rpost) metabolic terms reach FDR < 0.05 | Thesis Şekil 4.12 | `11_reactome_enrichment.R` | Fig11_reactome_enrichment_v3.* |
 | crispr_screen | GO enrichment | Over-representation analysis, BH-adjusted | clusterProfiler | **Top 10 by p.adjust, NO significance cutoff**, BP+MF+CC | GO CC yields only 1 term per panel at FDR < 0.05 | Thesis Şekil 4.9-4.10 | `12_go_enrichment.R` | Fig12_GO_*_enrichment_v3.* |
 
-## Discrepancy with the thesis text
+## Discrepancy with the thesis text (reproducibility / provenance note)
 
-`F_Emre_Bora_YL_Tez.pdf` states two different criteria in two different places:
+Historical notes refer to the submitted thesis PDF as `F_Emre_Bora_YL_Tez.pdf`.
+That file is **not distributed** in this repository; the section/page citations
+below come from those notes and should be verified against the author’s local
+thesis copy if needed.
 
-| Section | Printed page | Text |
+| Section | Printed page (per historical notes) | Text |
 |---|---|---|
 | Methods §3.7 | 30 | "anlamlılık eşiği yanlış keşif oranı **FDR < 0,25** olarak belirlenmiştir" |
 | Results §4.4 | 35 | "18, … 12 ve … 2 gen **p < 0,05** düzeyinde anlamlı bulunmuştur" |
-| Discussion | 46 | defends the "**FDR < 0,25**" choice as a permissive screening threshold |
+| Discussion | 46 | refers to "**FDR < 0,25**" as a permissive screening threshold |
 
-**The Results section is the one that matches the code and the data.** The counts
-18 / 12 / 2 reproduce exactly under the direction-concordant nominal p-value rule
-implemented in `01_volcano.R`, and Şekil 4.4 prints "18 gen (p < 0.05)".
+**The Results counts match the executable workflow and the data.** The counts
+18 / 12 / 2 reproduce under the direction-concordant nominal p-value rule used
+in the figure scripts, and Şekil 4.4 reports "18 gen (p < 0.05)".
 
-The Methods and Discussion statements do not describe what was run. No gene in
-this screen reaches FDR < 0,25 — the smallest observed FDR is 0,425 — so applying
-the stated criterion would yield 0, 0 and 0 genes and leave every gene-level
-figure empty. This repository implements the criterion that produced the thesis
-figures (nominal p < 0,05) and documents the correction outcome separately.
+No gene in this screen reaches FDR < 0,25 — the smallest observed FDR is 0,425 —
+so applying the Methods/Discussion wording as an executable criterion would yield
+0 / 0 / 0 genes and empty gene-level panels.
+
+The computational workflow retained here reflects the parameterization used to
+generate the submitted figures (nominal **p < 0,05**). Where wording in the
+thesis differs from the executable workflow, this repository records the
+discrepancy explicitly rather than retroactively altering the analysis. An FDR
+sensitivity figure set is retained separately (`run_crispr_analysis_fdr05.R`).
 
 ## Changing the significance threshold
 
-The threshold has **one** definition: `SIG_THRESH` in `crispr_screen/R/utils.R`,
-overridable with the `THESIS_SIG_THRESH` environment variable. Figure scripts
-read it; none of them define their own value.
+`SIG_THRESH` in `crispr_screen/R/utils.R` (overridable with `THESIS_SIG_THRESH`)
+is the shared default used by:
 
-> Before this was centralised, `pval_thresh <- 0.05` was repeated in six scripts
-> and the enrichment gene lists were static files. Editing the threshold in one
-> script changed that figure alone and left the other five — and all of the
-> enrichment figures — on the old value, with nothing visibly failing. That
-> failure mode is now blocked.
+- `00_derive_gene_lists.R` / gene-list provenance;
+- enrichment term filtering when `THESIS_SIG_METRIC=fdr`;
+- `load_gene_summary()` defaults when callers pass the shared threshold.
 
-To change it safely, all three steps are required:
+**It is not fully universal across every figure script.** Several thesis figure
+scripts still set a local `pval_thresh <- 0.05` (e.g. `01_volcano.R`,
+`02_rank_lfc.R`, `03_heatmap.R`, `04_barplot.R`, `08_cross_comparison.R`,
+`09_summary_table.R`). At the thesis default of 0.05 this matches `SIG_THRESH`.
+Those local constants were **not** refactored here because restricted inputs /
+exact environment would be required to prove byte-identical PNG regeneration.
+
+To explore a different threshold safely (authorised inputs + matching
+environment), all of the following are required:
 
 ```bash
 export THESIS_SIG_THRESH=0.01
+# Also update or temporarily align any local pval_thresh <- 0.05 constants
+# in the figure scripts if you need the threshold to apply uniformly.
 Rscript crispr_screen/scripts/00_derive_gene_lists.R     # re-select hit genes
 Rscript crispr_screen/scripts/00_compute_enrichment.R    # recompute enrichment
 Rscript crispr_screen/scripts/run_crispr_analysis.R      # rebuild figures
 ```
 
-`run_crispr_analysis.R` verifies before it renders anything that the gene lists
-on disk match the threshold in force. If they do not, it **refuses to run** and
-names the genes that moved, rather than producing a figure set in which the
-gene-level and enrichment panels describe different gene sets. Check the state
-at any time without writing:
+Verify committed gene lists against MAGeCK summaries (requires restricted
+inputs) without writing:
 
 ```bash
 Rscript crispr_screen/scripts/00_derive_gene_lists.R --check
 ```
 
-Gene-list membership is always defined on the **nominal** p-value, whatever
-`THESIS_SIG_METRIC` is set to: which genes entered enrichment is a property of
-the screen's hit-calling, while the FDR mode changes only how enrichment *terms*
-are filtered for display. This is what lets `run_crispr_analysis_fdr05.R` operate
-on the thesis gene sets, as intended.
+`run_crispr_analysis.R` itself does **not** auto-refuse on gene-list mismatch;
+use `--check` explicitly. Gene-list membership is always defined on the
+**nominal** p-value, whatever `THESIS_SIG_METRIC` is set to: which genes entered
+enrichment is a property of the screen's hit-calling, while the FDR mode changes
+only how enrichment *terms* are filtered for display. This is what lets
+`run_crispr_analysis_fdr05.R` operate on the thesis gene sets, as intended.
 
 ### What is still hardcoded
 

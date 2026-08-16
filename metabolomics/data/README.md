@@ -1,5 +1,9 @@
 # metabolomics/data/ — A172-S vs A172-R LC-MS metabolomics
 
+> **PROVENANCE / UNPUBLISHED / NOT INCLUDED IN THE FINAL SUBMITTED THESIS
+> RESULTS.** Processed tables here document the research process; they are not
+> thesis result tables.
+
 ## Study design
 
 | Group | Cell line | TRAIL sensitivity | Replicates |
@@ -38,10 +42,11 @@ Metabolites were identified via:
 2. MS/MS spectral matching where available
 3. Retention time matching against in-house standards
 
-⚠️ **Note**: 2,6-Dichloro-4-nitroaniline (top hit) may be an environmental
-contaminant — flagged for verification in the thesis.
+Note: 2,6-Dichloro-4-nitroaniline (top hit) may be an environmental
+contaminant — flagged for verification in research notes.
 
-## .gitignore notes
+## Tracking notes
 
-- `*.csv`, `*.tsv`, `*.xlsx` in `data/` are git-ignored except README.md
-- Raw LC-MS files (.raw, .mzML, .mzXML) are excluded
+Processed non-sensitive `*.csv` files under `metabolomics/data/` are allow-listed
+in the root `.gitignore` and may be committed for provenance. Raw LC-MS files
+(`.raw`, `.mzML`, `.mzXML`) are excluded.

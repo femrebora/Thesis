@@ -30,8 +30,10 @@ Rscript tcga_gbm/scripts/run_tcga_analysis.R phase2   # Phase 2 — figures
 ```
 
 Phase 1 needs network access and downloads several GB into `GDCdata/`
-(git-ignored). Phase 2 needs only the Table01–Table04 CSVs, which are committed,
-so **the thesis figures can be regenerated without re-downloading TCGA**.
+(git-ignored). Phase 2 needs only the committed Table01 / Table02 / Table04
+CSVs for the Cox forest figures (Şekil 4.13–4.15), so **those thesis figures can
+be regenerated without re-downloading TCGA**. `Table03_sample_qc_summary.csv` is
+written by Phase 1 but is not committed.
 
 ## Two files named `utils.R`
 

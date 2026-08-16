@@ -29,7 +29,8 @@ BASE_FAMILY <- .pick_family()
 # -- Paths ---------------------------------------------------------------------
 # All paths are anchored to the module directory via here::here(), so scripts run
 # correctly regardless of the working directory. Inputs (count matrix, MAGeCK
-# gene summaries) live in data/ and are git-ignored; see crispr_screen/README.md.
+# gene summaries) live in data/ and are git-ignored; see crispr_screen/README.md
+# and crispr_screen/data/README.md.
 .MODULE_DIR <- here::here("crispr_screen")
 DATA_DIR    <- file.path(.MODULE_DIR, "data")
 FIG_DIR     <- file.path(.MODULE_DIR, "figures")
@@ -47,6 +48,12 @@ GENE_DIR    <- file.path(DATA_DIR, "gene_lists")
 #
 # See scripts/run_crispr_analysis_fdr05.R. Outputs then carry SIG_SUFFIX so the
 # baseline figures are never overwritten.
+#
+# NOTE: Several figure scripts still declare a local `pval_thresh <- 0.05` and
+# pass that into loaders/plot code. At the thesis default this equals SIG_THRESH;
+# it is not a fully centralised single constant across every script. See
+# docs/methods_and_thresholds.md. Do not "fix" those locals without proving
+# byte-identical PNG regeneration under the recorded environment.
 SIG_METRIC <- tolower(Sys.getenv("THESIS_SIG_METRIC", "pvalue"))
 if (!SIG_METRIC %in% c("pvalue", "fdr")) {
   stop("THESIS_SIG_METRIC must be 'pvalue' or 'fdr', got: ", SIG_METRIC)

@@ -26,8 +26,18 @@ FASTQ (paired-end, 13 samples)
         crispr_screen/scripts/*.R  (thesis figures)
 ```
 
-`REPRODUCIBLE_PIPELINE.md` is the full protocol: sample groups, comparison
-definitions, environment setup, QC thresholds and known caveats.
+`REPRODUCIBLE_PIPELINE.md` is the scientific protocol for this stage: software,
+versions, input structure, sample definitions, MAGeCK parameters, scaffold /
+sgRNA settings, comparisons, QC, and known limitations. It is **not** a
+requirement to use any AI tooling to reproduce the analysis.
+
+## Sample terminology
+
+S0 / R0 = Day 0 baselines; Spost / Rpost = tumour-derived after in-vivo growth.
+There was **no TRAIL treatment in this screen**. Some historical Python label
+strings in `scripts/_thesis_utils.py` still say “Post-TRAIL”; those strings are
+provenance of the superseded Python figure generation and do not redefine the
+experimental design of record used by the thesis R pipeline.
 
 ## Two counting routes, one of record
 
