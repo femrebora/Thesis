@@ -12,6 +12,14 @@ Thesis:     "Metabolic Determinants of TRAIL Resistance in GBM"
 Author:     Emre Bora
 Version:    1.0.0 — 2026-06-09
 
+Sample-label note (design of record):
+    Spost / Rpost are tumour-derived after in-vivo growth; there was no TRAIL
+    treatment in this screen. Some display strings below still say "Post-TRAIL"
+    for historical Python-figure provenance. The thesis R pipeline
+    (crispr_screen/R/utils.R) uses the tumour-derived / Day-0 terminology.
+    Do not treat those legacy English labels as a change to sample IDs or
+    MAGeCK comparisons.
+
 Usage:
     from _thesis_utils import (
         ThesisConfig, ThesisStyle, setup_logging,

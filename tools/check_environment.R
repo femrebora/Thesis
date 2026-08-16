@@ -9,7 +9,9 @@
 #
 #   Rscript tools/check_environment.R
 #
-# Exit status 0 = every package matches. 1 = at least one differs or is missing.
+# Exit status 0 = R version and every listed package match.
+# Exit status 1 = R version differs, and/or at least one package differs or is
+# missing.
 # =============================================================================
 
 manifest <- here::here("ENVIRONMENT.txt")
@@ -21,7 +23,8 @@ lines <- readLines(manifest, warn = FALSE)
 
 r_recorded <- sub("^R version: *", "", grep("^R version:", lines, value = TRUE)[1])
 r_current  <- R.version.string
-cat(sprintf("%-22s %s\n", "R", if (identical(r_recorded, r_current)) "match"
+r_ok <- identical(r_recorded, r_current)
+cat(sprintf("%-22s %s\n", "R", if (r_ok) "match"
             else paste0("DIFFERS\n    recorded: ", r_recorded,
                         "\n    current : ", r_current)))
 
@@ -51,15 +54,21 @@ for (row in rows) {
   }
 }
 
+failed <- (!r_ok) || (mismatches > 0L)
+
 if (mismatches > 0L) {
   cat("\n", mismatches, " package(s) differ from the recorded environment.\n", sep = "")
   cat("Figures may still be scientifically correct, but can differ cosmetically\n")
   cat("(axis breaks, panel layout, label placement). Compare PNGs before use:\n")
   cat("  git status --short -- '*.png'\n")
-} else if (!identical(r_recorded, r_current)) {
-  cat("\nAll packages match, but the R version differs.\n")
-} else {
+}
+if (!r_ok) {
+  cat("\nR version differs from the recorded thesis environment.\n")
+  cat("  recorded: ", r_recorded, "\n", sep = "")
+  cat("  current : ", r_current, "\n", sep = "")
+}
+if (!failed) {
   cat("\nEnvironment matches the one that produced the thesis figures.\n")
 }
 
-quit(save = "no", status = if (mismatches > 0L) 1L else 0L)
+quit(save = "no", status = if (failed) 1L else 0L)

@@ -1,165 +1,307 @@
-# Thesis
+# Master’s Thesis — Computational Analysis Repository
 
-> **Scope note.** The metabolomics module is retained here for provenance but its
-> results were removed from the submitted thesis (unpublished data). The thesis
-> figure set is produced by the `crispr_screen` and `tcga_gbm` modules only.
+**Author:** Furkan Emre Bora
+**Repository:** [https://github.com/femrebora/Thesis](https://github.com/femrebora/Thesis)
+
+This repository contains the computational analysis, reproducibility materials, processed outputs, and figure-generation code associated with the author’s Master’s thesis.
+
+It is a **research compendium / thesis reproducibility archive**, not a general-purpose software project. The scientific analysis that produced the submitted thesis figures is treated as a **frozen record**: parameters, gene lists, statistical thresholds, sample definitions, and committed baseline figures are preserved as used for the thesis.
+
+> The thesis PDF itself is **not distributed** in this repository. Documentation refers to the submitted thesis by the working filename `F_Emre_Bora_YL_Tez.pdf` where that filename appears in historical notes; the file is not present in this clone.
+
+---
+
+## Thesis relationship
+
+This GitHub repository is the computational companion to the submitted Master’s thesis. It documents:
+
+- which code generated which thesis figure;
+- which parameters and software versions were used;
+- which inputs are public versus restricted;
+- what was exploratory or excluded from the final thesis.
+
+It does **not** re-analyse the screen under newer methodological preferences.
+
+---
+
+## Research overview
+
+The thesis work centres on metabolic aspects of TRAIL resistance in glioblastoma (GBM) models, with three computational modules:
+
+| Module | Role in the submitted thesis |
+|--------|------------------------------|
+| **CRISPR/Cas9 metabolic screen** (`crispr_screen/`) | Final thesis figures (Şekil 4.1, 4.3–4.12) |
+| **TCGA-GBM** (`tcga_gbm/`) | Final thesis figures (Şekil 4.13–4.15) |
+| **Metabolomics** (`metabolomics/`) | **Provenance only — not included in the submitted thesis results** |
+
+---
+
+## What this repository contains
+
+- Executable R (and upstream Python) workflows used for the thesis analyses
+- Documented analysis parameters and thresholds (`docs/methods_and_thresholds.md`)
+- Figure/table → script mapping (`docs/figure_table_mapping.md`)
+- Committed processed, non-sensitive tables and gene lists
+- Committed baseline thesis figures (reference artefacts)
+- Historical environment manifest (`ENVIRONMENT.txt`)
+- Upstream CRISPR FASTQ → MAGeCK provenance
+- Metabolomics session/figure code retained for research-process documentation
+
+---
+
+## Final thesis analysis scope
+
+**Included in the submitted thesis figure set**
+
+- CRISPR R figure pipeline (`crispr_screen/scripts/`), criterion of record: nominal MAGeCK RRA **p < 0.05**
+- TCGA-GBM Phase 1 tables + Phase 2 Cox forest figures
+
+**Retained but not part of the submitted thesis results**
+
+- Entire `metabolomics/` module (unpublished / excluded from the final thesis)
+- CRISPR `_fdr05` sensitivity figure set
+- Upstream Python first-generation figures and exploratory CRISPR scripts (`05b`, `07_replicate_corr`, improved/scaffold analyses)
+- TCGA `analysis/exploratory/` (PPI, drug, immune, mutation)
+
+---
 
 ## Repository structure
 
 ```
 Thesis/
-├── README.md                       # This file
-├── .gitignore                      # Data protection rules
-├── .Rprofile                       # renv auto-load (optional; degrades gracefully)
-├── ENVIRONMENT.txt                 # exact package versions of the figure run
-├── tools/check_environment.R       # verify your versions against the above
-├── shared/                         # Cross-module utilities
-│   ├── R/                          # Shared R functions
-│   └── plotting/                   # Shared plotting themes
-├── config/                         # Global configuration
-├── docs/                           # Documentation
-│   ├── methods_and_thresholds.md   # Analysis parameter table
-│   └── figure_table_mapping.md     # Figure/table → script map
-├── data/                           # (git-ignored — raw input data)
-├── tests/                          # Validation tests
-├── examples/                       # Example outputs
-├── tcga_gbm/                       # Module 1: TCGA-GBM expression & survival
-│   ├── analysis/                   #   Phase 1 — GDC download, expression, Cox survival
-│   │   └── exploratory/            #   PPI, drug, immune, mutation (not in thesis)
-│   ├── scripts/                    #   Phase 2 — figures from precomputed tables
-│   └── results/                    #   Table01–Table04 (committed)
-├── metabolomics/                   # Module 2: A172 metabolomics profiling
-│   ├── upstream/                   #   MetaboAnalystR session records (provenance)
-│   └── scripts/                    #   figure code
-└── crispr_screen/                  # Module 3: CRISPR/Cas9 metabolic screen
-    ├── upstream/                   #   FASTQ → MAGeCK count → MAGeCK test
-    │   ├── nf-core/                #   nf-core/crisprseq v2.3.0 run
-    │   └── scripts/                #   01–08 + run_all.sh (pipeline of record)
-    ├── scripts/                    #   00 enrichment + 01–12 thesis figures
-    └── results/                    #   enrichment tables, gene summaries
+├── README.md
+├── ENVIRONMENT.txt                 # historical R/package versions (thesis run)
+├── .Rprofile                       # loads renv only if renv.lock exists
+├── .gitignore
+├── tools/
+│   └── check_environment.R         # validate installed versions vs ENVIRONMENT.txt
+├── docs/
+│   ├── methods_and_thresholds.md   # analysis parameters (source of truth)
+│   └── figure_table_mapping.md     # thesis Şekil/Tablo → script map
+├── shared/
+│   └── R/plotting_themes.R         # shared colour helpers (optional utility)
+├── crispr_screen/
+│   ├── README.md                   # module overview + public vs local reproduction
+│   ├── data/                       # restricted inputs (git-ignored) + gene_lists/
+│   ├── R/utils.R                   # shared CRISPR helpers / labels / palettes
+│   ├── scripts/                    # 00_* + 01–12 thesis figure scripts + runners
+│   ├── results/                    # enrichment tables, summaries, sessionInfo
+│   ├── figures/                    # baseline + _fdr05 / historical variants
+│   ├── metadata/                   # sample metadata template
+│   └── upstream/                   # FASTQ → MAGeCK pipeline of record
+├── tcga_gbm/
+│   ├── analysis/                   # Phase 1 (GDC + survival) + exploratory/
+│   ├── scripts/                    # Phase 2 figures + module runner
+│   ├── results/.../tables/         # Table01, Table02, Table04 (committed)
+│   └── figures/                    # Şekil 4.13–4.15 outputs
+└── metabolomics/                   # PROVENANCE / unpublished / not in thesis
+    ├── upstream/                   # MetaboAnalystR session transcripts
+    ├── scripts/                    # figure regeneration (known limitations)
+    ├── data/                       # processed metabolite tables
+    └── figures/
 ```
 
-## Analysis chain, end to end
+There is **no** top-level `config/`, `data/`, `tests/`, or `examples/` directory, and no `shared/plotting/` directory (plotting helpers live in `shared/R/`).
 
-```
-CRISPR   FASTQ ─▶ upstream/scripts/run_all.sh ─▶ count_table.txt
-                                              ─▶ *.gene_summary.tsv
-                     ─▶ scripts/00_compute_enrichment.R ─▶ results/{kegg,reactome,go}_*.csv
-                     ─▶ scripts/run_crispr_analysis.R   ─▶ Şekil 4.1, 4.3–4.12
+---
 
-TCGA     GDC ─▶ analysis/01_expression_survival.R ─▶ results/.../Table01–04
-                     ─▶ scripts/run_tcga_analysis.R phase2 ─▶ Şekil 4.13–4.15
-```
+## Reproducibility levels
 
-Each stage is independently runnable from the artefacts the previous one commits,
-so the thesis figures can be rebuilt without re-running the restricted upstream
-steps or re-downloading TCGA.
+### 1. Public repository (fresh clone)
 
-## Modules
+A public clone supports **inspection and partial reproduction**:
 
-### 1. TCGA-GBM (`tcga_gbm/`)
-12-gene expression and survival analysis in the TCGA-GBM cohort.
-- **Phase 1 (data + statistics)**: `cd tcga_gbm/analysis && Rscript 01_expression_survival.R`
-  — downloads from GDC, writes Table01–Table04. Needs network; slow.
-- **Phase 2 (figures)**: `Rscript tcga_gbm/scripts/run_tcga_analysis.R phase2`
-  — reads the committed tables, no download needed.
-- **Key analyses**: RNA-seq expression, median-split Cox PH survival,
-  continuous-expression Cox robustness, expression boxplots
+- exact code and documented parameters;
+- environment version manifest;
+- committed gene lists and processed non-sensitive CRISPR enrichment/summary tables;
+- committed thesis figures (as reference artefacts);
+- TCGA Phase 2 figures from committed summary tables (no GDC download required for the Cox forest panels);
+- methodology documentation and figure provenance.
 
-### 2. Metabolomics (`metabolomics/`)
-LC-MS metabolomics profiling of A172-S (sensitive) vs A172-R (resistant)
-glioblastoma cell lines (104 metabolites, n=4 per group).
-- **Entry point**: `Rscript metabolomics/scripts/run_metabolomics_analysis.R`
-  (known issue: does not self-terminate — see `metabolomics/upstream/README.md`)
-- **Key analyses**: Median/Log/Pareto normalization, Welch's t-test,
-  fold-change analysis, volcano plot, pathway enrichment (SMPDB/KEGG ORA)
+A fresh public clone **cannot** regenerate CRISPR thesis figures: the required count matrix and MAGeCK gene summaries are intentionally not distributed.
 
-### 3. CRISPR/Cas9 Screen (`crispr_screen/`)
-Targeted CRISPR/Cas9 **metabolic-gene** knockout screen (Sabatini metabolic
-library) in A172-R vs A172-S TRAIL-resistant GBM models. This is a focused
-sub-library screen, not a genome-wide screen; the enrichment background is the
-set of genes the library targets (see `load_library_universe()` in
-`crispr_screen/R/utils.R`).
-- **Upstream (restricted inputs)**: `cd crispr_screen/upstream/scripts && bash run_all.sh`
-  — FASTQ → MAGeCK count → MAGeCK test. See `crispr_screen/upstream/README.md`.
-- **Enrichment tables**: `Rscript crispr_screen/scripts/00_compute_enrichment.R`
-  — needs network (KEGG REST). Only needed if regenerating the tables.
-- **Figures**: `Rscript crispr_screen/scripts/run_crispr_analysis.R`
-- **Key analyses**: MAGeCK RRA gene-level scoring, volcano plot, ranked LFC,
-  heatmap, barplot, QC metrics, sgRNA-level profiles, cross-comparison,
-  summary table, KEGG/Reactome/GO enrichment
+### 2. Full local / authorised reproduction
+
+With restricted CRISPR inputs placed under `crispr_screen/data/` (schemas in `crispr_screen/data/README.md`), the author or an authorised researcher can regenerate CRISPR figures with the recorded environment.
+
+TCGA Phase 1 additionally requires network access to GDC via `TCGAbiolinks`.
+
+---
 
 ## Quick start
 
+### Inspection / public clone
+
 ```bash
-# 1. Clone the repository
-git clone <repo-url>
+git clone https://github.com/femrebora/Thesis.git
 cd Thesis
 
-# 2. Check your R package versions against the ones that produced the figures
+# Compare your R/packages to the historical thesis environment
 Rscript tools/check_environment.R
 
-# 3. Regenerate the thesis figures from the committed intermediate artefacts.
-#    Neither step needs the restricted raw data or a TCGA download.
-Rscript crispr_screen/scripts/run_crispr_analysis.R    # Şekil 4.1, 4.3–4.12
-Rscript tcga_gbm/scripts/run_tcga_analysis.R phase2    # Şekil 4.13–4.15
+# TCGA Phase 2 — regenerates Cox forest figures from committed tables
+# (no private CRISPR inputs; no GDC download needed for those panels)
+Rscript tcga_gbm/scripts/run_tcga_analysis.R phase2
+```
 
-# 4. (optional) Rebuild the CRISPR figures under a BH FDR < 0.05 criterion.
-#    Outputs carry a "_fdr05" suffix; baseline figures are never overwritten.
+CRISPR figure regeneration on a fresh clone is expected to **stop with a clear error** listing the missing restricted files.
+
+### Full authorised / local reproduction (restricted CRISPR inputs)
+
+Place these files under `crispr_screen/data/` (see `crispr_screen/data/README.md`):
+
+- `count_table.txt`
+- `Rpost_vs_R0.gene_summary.tsv`
+- `Spost_vs_Rpost.gene_summary.tsv`
+- `Spost_vs_S0.gene_summary.tsv`
+
+Then, ideally under R **4.4.2** with package versions matching `ENVIRONMENT.txt`:
+
+```bash
+Rscript tools/check_environment.R
+Rscript crispr_screen/scripts/run_crispr_analysis.R          # Şekil 4.1, 4.3–4.12
+Rscript tcga_gbm/scripts/run_tcga_analysis.R phase2          # Şekil 4.13–4.15
+
+# Optional sensitivity set (writes *_fdr05 outputs; does not overwrite baseline)
 Rscript crispr_screen/scripts/run_crispr_analysis_fdr05.R
 ```
 
-## Significance criterion
+**Network notes**
 
-The threshold is defined once, as `SIG_THRESH` in `crispr_screen/R/utils.R`.
-To change it, re-derive the gene lists and enrichment tables as well:
+- TCGA Phase 1 (`tcga_gbm/analysis/01_expression_survival.R`) downloads from GDC.
+- CRISPR enrichment recomputation (`00_compute_enrichment.R`) contacts live KEGG/Reactome resources; committed enrichment CSVs are the thesis values of record.
+- Metabolomics runner may hang on network calls; see `metabolomics/upstream/README.md`.
+
+Compare regenerated CRISPR figures via **PNG** digests (PDFs embed timestamps):
 
 ```bash
-export THESIS_SIG_THRESH=0.01
-Rscript crispr_screen/scripts/00_derive_gene_lists.R
-Rscript crispr_screen/scripts/00_compute_enrichment.R
-Rscript crispr_screen/scripts/run_crispr_analysis.R
+git status --short -- '*.png'
 ```
 
-`run_crispr_analysis.R` refuses to render if the gene lists on disk do not match
-the threshold in force, so a partially-updated figure set cannot be produced
-silently. Verify at any time with
-`Rscript crispr_screen/scripts/00_derive_gene_lists.R --check`.
+---
 
-Gene-level CRISPR significance in the thesis figures is the **uncorrected**
-MAGeCK RRA p-value (p < 0.05). No gene in this screen reaches FDR < 0.05 in any
-comparison (smallest observed FDR = 0.425). `docs/methods_and_thresholds.md`
-documents the full threshold sensitivity analysis and how to reproduce the
-FDR-corrected figure set.
+## CRISPR/Cas9 workflow
 
-## Reproducibility
+Targeted **metabolic-gene** knockout screen (Sabatini Human Metabolic Gene Knockout Library), not a genome-wide CRISPR screen.
 
-- **R version**: 4.4.2 (2024-10-31)
-- **Environment**: exact package versions are recorded in `ENVIRONMENT.txt`.
-  Verify yours with `Rscript tools/check_environment.R` before trusting a
-  regenerated figure. ggplot2 and scales in particular own axis-break selection
-  and panel layout, so a version bump can shift a figure cosmetically without
-  changing any underlying value.
-- **Key packages**: TCGAbiolinks, MetaboAnalystR (v4.0.0), MAGeCK (v0.5.9.5),
-  ggplot2, survival, survminer, clusterProfiler, ComplexHeatmap
-- **Path anchoring**: All scripts use `here::here()` — run from repo root
-- **Determinism**: verified by running the CRISPR pipeline three times in a fresh
-  clone on a different path — all PNGs byte-identical. Compare `.png` outputs,
-  never `.pdf`/`.docx`, which embed per-run timestamps.
+| Layer | Location | Role |
+|-------|----------|------|
+| Upstream pipeline of record | `crispr_screen/upstream/scripts/run_all.sh` | FASTQ → MAGeCK count → MAGeCK test |
+| nf-core provenance | `crispr_screen/upstream/nf-core/` | crisprseq v2.3.0 (R1-only first pass; superseded for counts) |
+| MAGeCK intermediates | `crispr_screen/data/*.gene_summary.tsv`, `count_table.txt` | **Restricted — not in public repo** |
+| Final R figure pipeline | `crispr_screen/scripts/run_crispr_analysis.R` | Submitted thesis figures |
+| FDR sensitivity | `run_crispr_analysis_fdr05.R` + `figures/fdr05/` | Exploratory / documentation |
+| Exploratory scripts | `05b_qc_palette_test.R`, `07_replicate_corr.R`, upstream `06–08` | Not final thesis figures |
 
-## Data availability
+**Criterion of record for submitted gene-level figures:** nominal MAGeCK RRA **p < 0.05**.
+No gene reaches BH FDR < 0.05 (minimum observed FDR ≈ 0.425). Parts of the written thesis mention FDR < 0.25; applying that criterion would not reproduce the reported hit counts. This repository preserves the computational criterion that generated the figures and records the wording discrepancy in `docs/methods_and_thresholds.md`.
 
-Restricted data (TCGA patient-level downloads, raw CRISPR count matrices,
-LC-MS raw files) are excluded from this repository per institutional policy.
-Processed results, gene lists, and metadata templates are included where
-they contain no protected health information.
+Post samples (**Spost**, **Rpost**) are tumour-derived after in-vivo growth; there was **no TRAIL treatment in this screen**. Resistance is a cell-line property (A172-S vs A172-R).
 
-See `docs/methods_and_thresholds.md` for full reproducibility parameters.
+Module docs: [`crispr_screen/README.md`](crispr_screen/README.md) · [`crispr_screen/upstream/REPRODUCIBLE_PIPELINE.md`](crispr_screen/upstream/REPRODUCIBLE_PIPELINE.md)
+
+---
+
+## TCGA-GBM workflow
+
+Public/controlled-access data originate from **TCGA / GDC** (project **TCGA-GBM**) and are subject to GDC access and use terms. They are not author-owned experimental data.
+
+| Phase | Script | Needs | Output |
+|-------|--------|-------|--------|
+| **Phase 1** | `tcga_gbm/analysis/01_expression_survival.R` (also mirrored under `scripts/`) | Network + GDC download | Table01–Table04 under `results/.../tables/` |
+| **Phase 2** | `tcga_gbm/scripts/make_tcga_figures.R` via `run_tcga_analysis.R phase2` | Committed tables | Şekil 4.13–4.15 |
+
+Frozen scientific configuration includes the **12-gene panel**, thesis **Tablo 4.2** LFC values, median-split Cox, continuous Cox, multivariable models, and FDR settings in `tcga_gbm/analysis/config.R` / `tcga_gbm/R/utils.R`.
+
+**Note:** `Table03_sample_qc_summary.csv` is produced by Phase 1 but is **not** committed in this repository. Table01, Table02, and Table04 are committed.
+
+See [`tcga_gbm/analysis/README.md`](tcga_gbm/analysis/README.md).
+
+---
+
+## Metabolomics provenance note
+
+**PROVENANCE / UNPUBLISHED / NOT INCLUDED IN THE FINAL SUBMITTED THESIS RESULTS**
+
+The metabolomics module documents broader research process (LC-MS profiling of A172-S vs A172-R). Do not treat its plots as final thesis figures. Session files under `metabolomics/upstream/` are interactive MetaboAnalystR transcripts, not clean standalone scripts. Known runner/network limitations are documented in `metabolomics/upstream/README.md` and do not affect reproduction of the submitted thesis.
+
+---
+
+## Environment and software versions
+
+`ENVIRONMENT.txt` is the **historical environment manifest** for the thesis figure run (R 4.4.2, captured 2026-08-02). Do not silently replace those versions with whatever is installed today.
+
+```bash
+Rscript tools/check_environment.R
+```
+
+There is **no** `renv.lock` in this repository. `.Rprofile` loads renv only if a lockfile is later added; do not run `renv::init()` expecting to recreate the thesis environment from today’s packages.
+
+Key tools used in the broader workflow (see module docs for detail): MAGeCK 0.5.9.5, nf-core/crisprseq v2.3.0, TCGAbiolinks, clusterProfiler / ReactomePA, MetaboAnalystR v4.0.0 (metabolomics provenance).
+
+---
+
+## Analysis parameters / frozen-analysis statement
+
+Detailed thresholds, comparisons, and package notes live in [`docs/methods_and_thresholds.md`](docs/methods_and_thresholds.md).
+
+This archive preserves what was actually run for the submitted figures. Where thesis wording differs from the executable workflow, the discrepancy is documented rather than retroactively altering the analysis.
+
+---
+
+## Figure and table provenance
+
+Complete mapping: [`docs/figure_table_mapping.md`](docs/figure_table_mapping.md).
+
+Committed baseline PNGs/PDFs are **immutable reference artefacts**. Prefer documenting historical/`_v3`/`_rebuilt`/`_fdr05` variants over deleting them.
+
+---
+
+## Data availability and data-source statement
+
+| Source | What | In this repo |
+|--------|------|--------------|
+| Author / laboratory experimental CRISPR sequencing | FASTQ, count matrix, MAGeCK gene summaries | **Not redistributed** publicly (git-ignored); schemas documented |
+| Author / laboratory metabolomics | Raw LC-MS; processed metabolite tables | Raw not included; processed CSVs retained for provenance |
+| TCGA / GDC | TCGA-GBM RNA-seq + clinical | Downloaded at runtime; large caches git-ignored; summary tables partly committed |
+| Processed non-sensitive outputs | Gene lists, enrichment CSVs, TCGA Table01/02/04, figures | Distributed for inspection / partial reproduction |
+
+Do not assume a single ownership model for all files. Third-party TCGA/GDC data remain subject to their access and use terms.
+
+---
+
+## Known limitations / reproducibility notes
+
+- Public clone cannot regenerate CRISPR thesis figures without restricted inputs.
+- `SIG_THRESH` in `crispr_screen/R/utils.R` is used by gene-list derivation and enrichment filtering; several figure scripts still set local `pval_thresh <- 0.05` (documented in methods; not refactored without byte-identical proof).
+- Gene-list consistency can be verified with `Rscript crispr_screen/scripts/00_derive_gene_lists.R --check` (requires MAGeCK summaries); the main figure runner does not itself re-derive lists.
+- KEGG annotations can drift if enrichment is recomputed against the live database; committed CSVs are the thesis values of record.
+- PDF/DOCX outputs embed per-run timestamps; PNG outputs are the byte-stable check artefacts.
+- Metabolomics runner has known non-termination / figure-regeneration quirks (excluded from thesis).
+- Exact `renv.lock` for the thesis environment is not reconstructed here.
+
+---
 
 ## Citation
 
-See `CITATION.cff` (if available) or cite the thesis directly.
+Cite this computational repository as supporting material for the Master’s
+thesis of **Furkan Emre Bora**, archived at
+[https://github.com/femrebora/Thesis](https://github.com/femrebora/Thesis).
 
-## License
+Upstream pipeline metadata records the working thesis title
+*Metabolic Determinants of TRAIL Resistance in GBM* (Cingöz Lab). Prefer the
+title page of the submitted thesis when citing the thesis itself. The thesis
+PDF is not distributed in this repository; do not invent a DOI or publication
+record.
 
-All rights reserved. Contact the author for permissions.
+---
+
+## License / reuse status
+
+All rights reserved. Contact the repository owner for permissions regarding code reuse.
+
+Separately:
+
+- **Laboratory experimental data** are not redistributed through this public repository where restricted.
+- **TCGA/GDC data** remain subject to GDC / TCGA access and use terms.
+- No open-source license file is granted by this repository at present.

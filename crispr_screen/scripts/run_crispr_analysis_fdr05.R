@@ -19,6 +19,8 @@
 #   Rscript crispr_screen/scripts/run_crispr_analysis_fdr05.R
 # ============================================================================
 
+suppressPackageStartupMessages(library(here))
+
 Sys.setenv(
   THESIS_SIG_METRIC = "fdr",
   THESIS_SIG_THRESH = "0.05",

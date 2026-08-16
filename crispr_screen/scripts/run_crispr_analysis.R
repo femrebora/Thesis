@@ -6,10 +6,10 @@
 # Usage (from anywhere inside the repo):
 #   Rscript crispr_screen/scripts/run_crispr_analysis.R
 #
-# Inputs (data/, git-ignored — see crispr_screen/README.md):
+# Inputs (data/, git-ignored — see crispr_screen/data/README.md):
 #   - count_table.txt                 MAGeCK count matrix (sgRNA x sample)
 #   - <comparison>.gene_summary.tsv   MAGeCK gene-level test output (x3)
-#   - gene_lists/*.csv                gene symbols fed to enrichment
+#   - gene_lists/*.txt                gene symbols fed to enrichment (committed)
 
 suppressPackageStartupMessages(library(here))
 
@@ -27,8 +27,12 @@ required <- c(
 missing <- required[!file.exists(required)]
 if (length(missing)) {
   stop("Missing required input(s):\n  ", paste(missing, collapse = "\n  "),
-       "\nThese files are restricted and not distributed with the repository. ",
-       "See crispr_screen/README.md > Data access.", call. = FALSE)
+       "\n\nThese files are restricted and are not distributed with the public ",
+       "repository. For schemas and placement, see crispr_screen/data/README.md. ",
+       "Module overview: crispr_screen/README.md. ",
+       "A fresh public clone can inspect code, committed gene lists, enrichment ",
+       "tables, and baseline figures, but cannot regenerate CRISPR thesis figures ",
+       "without these inputs.", call. = FALSE)
 }
 
 # Final-thesis figure scripts, in dependency order. 05b (palette test) and

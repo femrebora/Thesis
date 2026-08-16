@@ -1,9 +1,9 @@
 # CRISPR-Seq Reproducible Analysis Pipeline
 
-**Project:** PRJ25-131 — GBM TRAIL Metabolic CRISPR/Cas9 Screen  
-**Library:** Sabatini Human Metabolic Gene Knockout Library (Addgene #110066)  
-**Lab:** Cingöz Lab  
-**Version:** v1.0.0 — 2026-06-09  
+**Project:** PRJ25-131 — GBM TRAIL Metabolic CRISPR/Cas9 Screen
+**Library:** Sabatini Human Metabolic Gene Knockout Library (Addgene #110066)
+**Lab:** Cingöz Lab
+**Version:** v1.0.0 — 2026-06-09
 **Protocol Reference:** THESIS_MASTER_PROTOCOL_v5.13_FINAL.md
 
 ---
@@ -11,21 +11,25 @@
 ## Table of Contents
 
 1. [Overview](#overview)
-2. [Skills, Plugins & MCP Routing](#skills-plugins--mcp-routing)
-3. [Environment Setup](#environment-setup)
-4. [Input Data](#input-data)
-5. [Pipeline Architecture](#pipeline-architecture)
-6. [Step-by-Step Execution](#step-by-step-execution)
-7. [Figure Inventory](#figure-inventory)
-8. [QC Thresholds & Reporting](#qc-thresholds--reporting)
-9. [Known Issues & Caveats](#known-issues--caveats)
-10. [Final Submission Checklist](#final-submission-checklist)
+2. [Environment Setup](#environment-setup)
+3. [Input Data](#input-data)
+4. [Pipeline Architecture](#pipeline-architecture)
+5. [Step-by-Step Execution](#step-by-step-execution)
+6. [Figure Inventory](#figure-inventory)
+7. [QC Thresholds & Reporting](#qc-thresholds--reporting)
+8. [Known Issues & Caveats](#known-issues--caveats)
+9. [Final Submission Checklist](#final-submission-checklist)
 
 ---
 
 ## Overview
 
-This pipeline performs end-to-end analysis of a pooled CRISPR/Cas9 metabolic gene knockout screen. It processes paired-end FASTQ files from 13 samples across 4 experimental conditions (S0, Spost, R0, Rpost), runs MAGeCK for sgRNA counting and statistical testing, computes QC metrics from count data (never hardcoded), and generates publication-quality figures.
+This pipeline performs end-to-end analysis of a pooled CRISPR/Cas9 metabolic gene knockout screen. It processes paired-end FASTQ files from 13 samples across 4 experimental conditions (S0, Spost, R0, Rpost), runs MAGeCK for sgRNA counting and statistical testing, computes QC metrics from count data (never hardcoded), and generates first-generation Python figures.
+
+**Thesis figures of record** were later produced by the R pipeline in
+`crispr_screen/scripts/` (see repository root README and
+`docs/figure_table_mapping.md`). This upstream document describes the
+FASTQ → MAGeCK stage and historical Python outputs.
 
 ### Pipeline Summary
 
@@ -40,9 +44,13 @@ FASTQ (PE) → Concat R1+R2 → MAGeCK count → MAGeCK test (3 comparisons)
 | Condition | Samples | Description |
 |-----------|---------|-------------|
 | S0 | S01, S02, S03 | Sensitive cells — Day 0 baseline |
-| Spost | S1, S2, S3 | Sensitive cells — Post-TRAIL treatment |
+| Spost | S1, S2, S3 | Sensitive cells — tumour-derived after in-vivo growth |
 | R0 | R01, R02, R03 | Resistant cells — Day 0 baseline |
-| Rpost | R1, R2, R3, R4 | Resistant cells — Post-TRAIL treatment |
+| Rpost | R1, R2, R3, R4 | Resistant cells — tumour-derived after in-vivo growth |
+
+**Design of record:** there was **no TRAIL treatment in this screen**. Older
+labels that say “Post-TRAIL” are stale relative to the experimental design used
+for the thesis R figures (`crispr_screen/R/utils.R`).
 
 ### Comparisons
 
@@ -54,62 +62,12 @@ FASTQ (PE) → Concat R1+R2 → MAGeCK count → MAGeCK test (3 comparisons)
 
 ---
 
-## Skills, Plugins & MCP Routing
-
-This pipeline integrates with the Claude Code skills/plugins ecosystem for thesis work. When invoked, the following are available:
-
-### Active MCP Servers
-
-| MCP Server | Purpose | Pipeline Phase |
-|-----------|---------|---------------|
-| `context-mode` | Context-efficient file ops, sandboxed code execution | All phases |
-| `elicit` | Literature search for gene function annotation | Phase 4 (interpretation) |
-| `claude-mem` | Session memory, observation search | All phases |
-
-### Available Skills
-
-| Skill | Purpose | When to Invoke |
-|-------|---------|---------------|
-| `bioinformatics` | Variant scoring, pipeline standards, QC thresholds | QC assessment, pipeline design |
-| `avoid-ai-writing` | AI-writing detection avoidance | Report generation |
-| `opendraft-drafting` | Thesis drafting prompts (24 templates) | Writing results interpretation |
-| `academic-writing-agents:academic` | Multi-agent academic writing pipeline | Full paper drafting |
-| `literature_search_europepmc` | Europe PMC paper search | Gene function lookups |
-| `pubmed_database` | PubMed querying | Literature context |
-| `string_database` | Protein-protein interaction networks | Pathway analysis of hits |
-| `reactome_database` | Pathway database | Hit gene pathway enrichment |
-| `uniprot_database` | Protein function annotation | Hit gene characterization |
-
-### Plugin Agents (academic-writing-agents v3.7.0)
-
-| Agent | Role | Pipeline Phase |
-|-------|------|---------------|
-| `synthesis_agent` | Cross-source integration, contradiction resolution | Phase 5 (report) |
-| `research_architect_agent` | Methodology blueprint | Phase 0 (planning) |
-| `report_compiler_agent` | APA 7.0 report drafting | Phase 5 (report) |
-| `bibliography_agent` | Reference management | Phase 5 (report) |
-| `prose-polisher` | Academic prose improvement | Phase 5 (report) |
-| `technical-reviewer` | Technical accuracy verification | Phase 6 (review) |
-| `consistency-checker` | Terminology/cross-reference check | Phase 6 (review) |
-| `logic-reviewer` | Logical flow, argument structure | Phase 6 (review) |
-
-### Tool Routing Matrix
-
-```
-PHASE 1 — FASTQ Prep      → Bash, Python (no agents needed)
-PHASE 2 — MAGeCK count     → Bash, Python (no agents needed)
-PHASE 3 — MAGeCK test      → Bash, Python, R (no agents needed)
-PHASE 4 — QC & Figures     → Python, R, bioinformatics skill
-PHASE 5 — Interpretation   → research-analyst, synthesis_agent, string_database, reactome_database
-PHASE 6 — Report Writing   → report_compiler_agent, prose-polisher, technical-reviewer
-PHASE 7 — Review & Submit  → consistency-checker, logic-reviewer, avoid-ai-writing
-```
-
----
-
 ## Environment Setup
 
-### Option A: Conda (Recommended)
+### Conda (recommended)
+
+No Dockerfile or published container image is distributed with this repository.
+Use a local conda (or equivalent) environment:
 
 ```bash
 # Create environment
@@ -135,22 +93,9 @@ python -c "import matplotlib; print('OK')"
 Rscript -e "library(ggplot2); print('OK')"
 ```
 
-### Option B: Docker
-
-```bash
-# Build image
-docker build -t crispr-pipeline -f Dockerfile .
-
-# Run pipeline
-docker run --rm -v $(pwd):/data crispr-pipeline bash run_all.sh
-```
-
-### Option C: Singularity/Apptainer (HPC)
-
-```bash
-apptainer build crispr-pipeline.sif docker://emrebora/crispr-pipeline:latest
-apptainer run --bind /data crispr-pipeline.sif bash run_all.sh
-```
+For the **thesis R figure** stage, prefer the historical R package versions in
+the repository root `ENVIRONMENT.txt` (R 4.4.2) rather than the illustrative
+`r-base=4.3` line above.
 
 ### Required External Tools
 
@@ -277,8 +222,8 @@ Rscript -e 'cat(paste0(\"R \", R.version\$major, \".\", R.version\$minor, \"\\n\
 
 #### Step 1 — Prepare FASTQ (Concatenate R1+R2)
 
-**Script:** `01_prepare_fastq.py`  
-**Input:** `CRISPR-Seq_Analysis/Fastq/*.fq.gz`  
+**Script:** `01_prepare_fastq.py`
+**Input:** `CRISPR-Seq_Analysis/Fastq/*.fq.gz`
 **Output:** `results/combined_fastq/{label}_combined.fq.gz`
 
 ```bash
@@ -291,8 +236,8 @@ python 01_prepare_fastq.py \
 
 #### Step 2 — MAGeCK Count
 
-**Script:** `02_mageck_count.py`  
-**Input:** Combined FASTQ files + library TSV  
+**Script:** `02_mageck_count.py`
+**Input:** Combined FASTQ files + library TSV
 **Output:** `results/count/count_table.txt`, `results/count/count_table_fixed.txt`
 
 ```bash
@@ -314,8 +259,8 @@ python 02_mageck_count.py \
 
 #### Step 3 — MAGeCK Test (RRA)
 
-**Script:** `03_mageck_test.py`  
-**Input:** Fixed count table  
+**Script:** `03_mageck_test.py`
+**Input:** Fixed count table
 **Output:** `results/test/{comparison}.gene_summary.txt`, `results/test/{comparison}.sgrna_summary.txt`
 
 ```bash
@@ -326,9 +271,9 @@ python 03_mageck_test.py \
 
 **Comparisons performed:**
 
-1. `Spost_vs_S0`: Sensitive post-treatment vs Day-0 (S1,S2,S3 vs S01,S02,S03)
-2. `Rpost_vs_R0`: Resistant post-treatment vs Day-0 (R1,R2,R3,R4 vs R01,R02,R03)
-3. `Spost_vs_Rpost`: Sensitive vs Resistant (S1,S2,S3 vs R1,R2,R3,R4)
+1. `Spost_vs_S0`: Sensitive tumour-derived vs Day-0 (S1,S2,S3 vs S01,S02,S03)
+2. `Rpost_vs_R0`: Resistant tumour-derived vs Day-0 (R1,R2,R3,R4 vs R01,R02,R03)
+3. `Spost_vs_Rpost`: Sensitive vs Resistant tumour-derived (S1,S2,S3 vs R1,R2,R3,R4)
 
 **MAGeCK test parameters:**
 
@@ -342,8 +287,8 @@ python 03_mageck_test.py \
 
 #### Step 4 — QC Metrics (Dynamically Computed)
 
-**Script:** `04_qc_metrics.py`  
-**Input:** Count table + gene summaries  
+**Script:** `04_qc_metrics.py`
+**Input:** Count table + gene summaries
 **Output:** `results/reports/qc_metrics.csv`
 
 ```bash
@@ -365,8 +310,8 @@ python 04_qc_metrics.py \
 
 #### Step 5 — Generate Publication Figures
 
-**Script:** `05_generate_figures.py`  
-**Input:** Gene summaries + count table  
+**Script:** `05_generate_figures.py`
+**Input:** Gene summaries + count table
 **Output:** `results/figures/Fig{1-9}_*.{pdf,png}`
 
 ```bash
@@ -382,8 +327,8 @@ python 05_generate_figures.py \
 
 #### Step 6 — Deep QC Inspection (New Analysis)
 
-**Script:** `06_new_analysis_qc.py`  
-**Input:** Original + combined run results  
+**Script:** `06_new_analysis_qc.py`
+**Input:** Original + combined run results
 **Output:** `results/figures/QC{1-5}_*.{pdf,png}`, `results/reports/qc_comparison_report.txt`
 
 ```bash
@@ -396,8 +341,8 @@ python 06_new_analysis_qc.py \
 
 #### Step 7 — Improved Analysis
 
-**Script:** `07_improved_analysis.py`  
-**Input:** Count tables  
+**Script:** `07_improved_analysis.py`
+**Input:** Count tables
 **Output:** `results/improved_results/`, `results/figures/IMP{1,2}_*.{pdf,png}`
 
 ```bash
@@ -415,8 +360,8 @@ python 07_improved_analysis.py \
 
 #### Step 8 — Scaffold Comparison
 
-**Script:** `08_scaffold_comparison.py`  
-**Input:** FASTQ files  
+**Script:** `08_scaffold_comparison.py`
+**Input:** FASTQ files
 **Output:** `results/figures/SCAF1_*.{pdf,png}`, `results/scaffold_results/`
 
 ```bash
@@ -621,16 +566,16 @@ Before submitting results, verify:
 
 ## Citation
 
-If you use this pipeline, please cite:
+This upstream protocol is part of the Master’s thesis reproducibility repository:
 
-```
-Emre Bora. (2026). CRISPR-Seq Reproducible Analysis Pipeline v1.0.0.
-PRJ25-131 — GBM TRAIL Metabolic CRISPR/Cas9 Screen.
-Cingöz Lab. https://github.com/emrebora/Thesis
-```
+[https://github.com/femrebora/Thesis](https://github.com/femrebora/Thesis)
+
+Cite the thesis and/or that repository as appropriate. Do not treat AI tooling,
+MCP servers, or drafting assistants as scientific dependencies of this analysis
+(historical development notes of that kind were removed from this protocol).
 
 ---
 
-*Pipeline v1.0.0 — Generated 2026-06-09*  
-*Protocol compatible with THESIS_MASTER_PROTOCOL_v5.13_FINAL.md*  
-*All QC metrics dynamically computed — zero hardcoded values*
+*Pipeline documentation v1.0.0 — originally dated 2026-06-09; sample-label and
+tooling sections revised for thesis-archive consistency.*
+*All QC metrics in the Python stage are computed dynamically from count data.*

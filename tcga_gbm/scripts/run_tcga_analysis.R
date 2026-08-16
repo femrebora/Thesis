@@ -11,10 +11,11 @@
 #     exports summary tables to tcga_gbm/results/01_expression_survival/tables/.
 #
 #   Phase 2 — make_tcga_figures.R
-#     Reads the precomputed survival tables and GDCdata cache, generates
-#     publication-quality Şekil 4.15–4.17 (expression boxplot, Cox forest
-#     plot, continuous Cox sensitivity forest plot) with Turkish labels,
-#     and writes a Turkish survival summary CSV.
+#     Reads the precomputed survival tables and optional GDCdata cache, generates
+#     publication-quality Şekil 4.13–4.15 (median-split Cox forest / HR panel and
+#     continuous Cox sensitivity forest) with Turkish labels, plus an expression
+#     summary plot that is generated but not assigned a Şekil number in the
+#     canonical thesis map (docs/figure_table_mapping.md).
 #
 # Usage:
 #   Rscript tcga_gbm/scripts/run_tcga_analysis.R          # both phases
